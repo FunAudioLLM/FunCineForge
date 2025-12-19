@@ -40,9 +40,10 @@ python setup.py
 ### Datasets
 For reference, we will soon open-source a television dataset produced by FunCineForge. If you are producing your own data, 
 we suggest you refer to the following requirements when collecting relevant movies and television series.
-1. Video Source: Television series or movies, not documentaries, with many scenes of monologues or dialogues, and speakers whose faces are not obscured (e.g., wearing masks).
-2. The pronunciation is standard, the words are clear, the voice is prominent, it is not a dialect, and the spoken language is weak.
-3. The image has high resolution, clear faces, ample lighting, and few dark scenes.
+
+1. Video source: Television series or movies, non documentaries, more monologues or dialogue scenes, clear and unobstructed faces (such as without masks and veils).
+2. Voice requirements: standard pronunciation, clear articulation and prominent voice. Avoid materials with too much dialect, background noise or strong oral sense.
+3. Picture quality: high pixels, clear facial details, sufficient light, avoiding extremely dark or strongly backlit picture scenes.
 
 ### How to use
 
