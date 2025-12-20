@@ -81,7 +81,7 @@ python cot.py --root_dir datasets/clean/zh --provider google --model gemini-2.5-
 ```shell
 python speech_tokenizer.py --root datasets/clean/zh
 ```
-- （参考）cot结果清洗并纠正；视频片段类型（独白、对话、多人、旁白）判断；切分训练集和测试集；生成索引。
+- （参考）结果清洗并纠正；视频片段类型（独白、对话、多人、旁白）判断；切分训练集和测试集；生成索引。
 ```shell
 python build_datasets.py --root_dir datasets/clean/zh --out_dir datasets/clean --save
 ```
