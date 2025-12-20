@@ -12,6 +12,7 @@
 
 <div align="center">  
 <h4><a href="#快速开始">快速开始</a>
+｜<a href="#合成样例">合成样例</a>
 ｜<a href="#近期更新">近期更新</a>
 ｜<a href="#社区交流">社区交流</a>
 </h4>
@@ -84,6 +85,13 @@ python speech_tokenizer.py --root datasets/clean/zh
 ```shell
 python build_datasets.py --root_dir datasets/clean/zh --out_dir datasets/clean --save
 ```
+
+<a name="合成样例"></a>
+## 合成样例 🎬
+我们使用 FunCineForge 从数百部电视剧中生成的大规模多模态数据集训练了一个 VTTS 配音大模型。下面链接展示了合成结果示例。
+
+[演示视频](https://speech-lab-share-data.oss-cn-shanghai.aliyuncs.com/FunCineForge/demo.mp4)
+
 <a name="近期更新"></a>
 ## 近期更新 🔨
 

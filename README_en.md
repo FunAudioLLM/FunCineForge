@@ -12,6 +12,7 @@
 
 <div align="center">  
 <h4><a href="#Quick-Start">Quick Start</a>
+｜<a href="#Synthesized-Demo">Synthesized Demo</a>
 ｜<a href="#Recent-Updates">Recent Updates</a>
 ｜<a href="#Comminicate">Comminicate</a>
 </h4>
@@ -84,6 +85,14 @@ python speech_tokenizer.py --root datasets/clean/zh
 ```shell
 python build_datasets.py --root_dir datasets/clean/zh --out_dir datasets/clean --save
 ```
+
+<a name="Synthesized-Demo"></a>
+## Synthesized Demo 🎬
+We trained a VTTS dubbing LLM-based model on a large-scale multimodal dataset generated from hundreds of television series using FunCineForge.
+The link below demonstrates example synthesis results.
+
+[Demo video](https://speech-lab-share-data.oss-cn-shanghai.aliyuncs.com/FunCineForge/demo.mp4)
+
 <a name="Recent-Updates"></a>
 ## Recent Updates 🔨
 
