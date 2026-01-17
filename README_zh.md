@@ -33,7 +33,7 @@
 FunCineForge 的运行仅依赖于一个 Python 环境。
 ```shell
 # 克隆 FunCineForge 仓库
-git clone git@github.com:xuan3986/FunCineForge.git
+git clone git@github.com:FunAudioLLM/FunCineForge.git
 conda create -n FunCineForge python=3.8.20 -y && conda activate FunCineForge
 sudo apt-get install ffmpeg
 # 初始化设置
