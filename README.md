@@ -44,7 +44,7 @@ python setup.py
 
 ### Data collection
 If you want to produce your own data, 
-we recommend that you refer to the following requirements to collect the corresponding movies and television series.
+we recommend that you refer to the following requirements to collect the corresponding movies or television series.
 
 1. Video source: TV dramas or movies, non documentaries, with more monologues or dialogue scenes, clear and unobstructed faces (such as without masks and veils).
 2. Speech Requirements: Standard pronunciation, clear articulation, prominent human voice. Avoid materials with strong dialects, excessive background noise, or strong colloquialism.
