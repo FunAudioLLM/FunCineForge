@@ -19,11 +19,11 @@
 </h4>
 </div>
 
-**FunCineForge** contains an end-to-end dataset pipeline for producing large-scale dubbing datasets and an MLLM-based dubbing model designed for diverse cinematic scenes. Using this pipeline, we constructed the first large-scale Chinese television dubbing dataset, which includes rich annotations and diverse scenes. In monologue, narration, dialogue, and multi-speaker scenes, our dubbing model consistently outperforms state-of-the-art methods in terms of audio quality, lip-sync, timbre transition, and instruction following.
+**FunCineForge** contains an end-to-end dataset pipeline for producing large-scale dubbing datasets and an MLLM-based dubbing model designed for diverse cinematic scenes. Using this pipeline, we constructed the first large-scale Chinese television dubbing dataset CineDub-CN, which includes rich annotations and diverse scenes. In monologue, narration, dialogue, and multi-speaker scenes, our dubbing model consistently outperforms state-of-the-art methods in terms of audio quality, lip-sync, timbre transition, and instruction following.
 
 <a name="Dataset&Demo"></a>
 ## Dataset & Demo 🎬
-You can access this [Website]() to get our dataset samples and demo samples. 
+You can access this [Website]() to get our CineDub-CN dataset samples and demo samples. 
 
 
 <a name="Dataset-Pipeline"></a>
@@ -92,13 +92,14 @@ python build_datasets.py --root_dir datasets/clean/zh --out_dir datasets/clean -
 
 <a name="Dubbing-Model"></a>
 ## Dubbing Model ⚙️
+Please stay tuned.
 
 
 
 <a name="Recent-Updates"></a>
 ## Recent Updates 🚀
 - 2025/12/18: FunCineForge dataset pipeline toolkit is online! 🔥
-- 2026/01/17: Demo samples and dataset samples released. 🔥
+- 2026/01/19: Demo samples and dataset samples released. 🔥
 
 
 
