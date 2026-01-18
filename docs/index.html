@@ -74,16 +74,18 @@
         <h2 class="text-3xl font-bold text-gray-900 mb-6 text-center" data-i18n="nav_abstract"></h2>
         <p class="text-gray-700 leading-relaxed text-lg text-justify">
             Movie dubbing is the task of synthesizing speech from scripts conditioned on video scenes,
-            requiring accurate lip sync, faithful timbre transfer, and alignment with character identity and emotion.
-            However, existing methods face three major limitations: 
-            (1) limited support for diverse cinematic scenes, being restricted to short-text monologue dubbing;
-            (2) the absence of automated end-to-end toolkits for producing high-quality multimodal dubbing datasets, 
-            which confines prior work primarily to animated dubbing rather than live-action television;
-            and (3) suboptimal performance in lip sync, speech quality, and emotional expressiveness.
+            requiring accurate lip sync, faithful timbre transfer, and proper modeling of character identity and emotion.
+            However, existing methods face two major limitations: 
+            (1) high-quality multimodal dubbing datasets are limited in scale, suffer from high word error rates, contain sparse annotations, 
+            rely on costly manual labeling, and are restricted to monologue scenes,
+            all of which hinder effective model training;
+            (2) existing dubbing models rely solely on the lip region to learn audio-visual alignment, 
+            which limits their applicability to complex live-action cinematic scenes,
+            and exhibit suboptimal performance in lip sync, speech quality, and emotional expressiveness.
             To address these issues, we propose FunCineForge, 
-            which comprises an end-to-end production toolkit for large-scale dubbing datasets 
+            which comprises an end-to-end production pipeline for large-scale dubbing datasets 
             and an MLLM-based dubbing model designed for diverse cinematic scenes.
-            Using the toolkit, we construct the first large-scale Chinese television dubbing dataset with rich annotations and diverse scenes, 
+            Using the pipeline, we construct the first Chinese television dubbing dataset with rich annotations, 
             and demonstrate the high quality of these data. 
             Experiments across monologue, narration, dialogue, and multi-speaker scenes show that 
             our dubbing model consistently outperforms SOTA methods in audio quality, lip sync, timbre transfer, and instruction following.
@@ -1198,7 +1200,7 @@
     <footer class="bg-slate-900 text-gray-400 py-12 text-center">
         <div class="max-w-7xl mx-auto px-4">
             <p class="mb-4 text-xl font-bold text-white">FunCineForge</p>
-            <p class="text-sm mb-6">Exploring the End-to-end Production Toolkit for Large-scale Dubbing Datasets and Multimodal Dubbing Models for Diverse Cinematic Scenes.</p>
+            <p class="text-sm mb-6">Exploring the End-to-end Production Pipeline for Large-scale Dubbing Datasets and Multimodal Dubbing Models for Diverse Cinematic Scenes.</p>
             <div class="text-xs text-gray-600">
                 &copy; Alibaba's Tongyi Lab Speech Team & University of Science and Technology of China. All rights reserved. <br>
             </div>
@@ -1227,7 +1229,7 @@ const i18n = {
     nav_dataset:"数据集",
     nav_pub:"发表",
     nav_faq:"FAQ",
-    hero_line1:"探索大规模配音数据集的端到端生产工具",
+    hero_line1:"探索大规模配音数据集的端到端生产流程",
     hero_line2:"和面向多样影视场景的多模态配音模型",
     new1:"2025.12.18：FunCineForge 正式发布。",
     new2:"2026.01.17：合成样例和数据集样例发布。",
@@ -1265,7 +1267,7 @@ const i18n = {
     nav_dataset:"Dataset",
     nav_pub:"Publication",
     nav_faq:"FAQ",
-    hero_line1:"Exploring the End-to-end Production Toolkit for Large-scale Dubbing Datasets",
+    hero_line1:"Exploring the End-to-end Production Pipeline for Large-scale Dubbing Datasets",
     hero_line2:"and Multimodal Dubbing Models for Diverse Cinematic Scenes",
     new1:"2025.12.18: FunCineForge officially released.",
     new2:"2026.01.17: Demo samples and dataset samples released.",

@@ -1,6 +1,6 @@
 ### <p align="center">「English | [简体中文](./README_zh.md)」</p>
 
-**<p align="center"> 🎬 FunCineForge: A Unified Dataset Toolkit and Model for Zero-Shot Movie Dubbing in Diverse Cinematic Scenes </p>**
+**<p align="center"> 🎬 FunCineForge: A Unified Dataset Pipeline and Model for Zero-Shot Movie Dubbing in Diverse Cinematic Scenes </p>**
 
 <div align="center">
 
@@ -12,26 +12,26 @@
 
 <div align="center">  
 <h4><a href="#Dataset&Demo">Dataset & Demo</a>
-｜<a href="#Dataset-Toolkit">Dataset Toolkit</a>
+｜<a href="#Dataset-Pipeline">Dataset Pipeline</a>
 ｜<a href="#Dubbing-Model">Dubbing Model</a>
 ｜<a href="#Recent-Updates">Recent Updates</a>
 ｜<a href="#Comminicate">Comminicate</a>
 </h4>
 </div>
 
-**FunCineForge** contains an end-to-end dataset toolkit for producing large-scale dubbing datasets and an MLLM-based dubbing model designed for diverse cinematic scenes. Using this toolkit, we constructed the first large-scale Chinese television dubbing dataset, which includes rich annotations and diverse scenes. In monologue, narration, dialogue, and multi-speaker scenes, our dubbing model consistently outperforms state-of-the-art methods in terms of audio quality, lip-sync, timbre transition, and instruction following.
+**FunCineForge** contains an end-to-end dataset pipeline for producing large-scale dubbing datasets and an MLLM-based dubbing model designed for diverse cinematic scenes. Using this pipeline, we constructed the first large-scale Chinese television dubbing dataset, which includes rich annotations and diverse scenes. In monologue, narration, dialogue, and multi-speaker scenes, our dubbing model consistently outperforms state-of-the-art methods in terms of audio quality, lip-sync, timbre transition, and instruction following.
 
 <a name="Dataset&Demo"></a>
 ## Dataset & Demo 🎬
 You can access this [Website]() to get our dataset samples and demo samples. 
 
 
-<a name="Dataset-Toolkit"></a>
-## Dataset Toolkit 🔨
+<a name="Dataset-Pipeline"></a>
+## Dataset Pipeline 🔨
 
 ### Environmental Installation
 
-FunCineForge only relies on a Python environment to run.
+FunCineForge dataset pipeline toolkit only relies on a Python environment to run.
 ```shell
 # Conda
 git clone git@github.com:FunAudioLLM/FunCineForge.git
@@ -97,7 +97,7 @@ python build_datasets.py --root_dir datasets/clean/zh --out_dir datasets/clean -
 
 <a name="Recent-Updates"></a>
 ## Recent Updates 🚀
-- 2025/12/18: FunCineForge toolkit source code is online! 🔥
+- 2025/12/18: FunCineForge dataset pipeline toolkit is online! 🔥
 - 2026/01/17: Demo samples and dataset samples released. 🔥
 
 

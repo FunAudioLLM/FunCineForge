@@ -1,6 +1,6 @@
 ### <p align="center">「[English](./README.md) | 简体中文」</p>
 
-**<p align="center"> 🎬 FunCineForge：一种统一的数据集工具与模型用于多样化影视场景的零样本影视配音 </p>**
+**<p align="center"> 🎬 FunCineForge：一种用于多样化影视场景零样本配音的统一数据集管道与模型 </p>**
 
 <div align="center">
 
@@ -12,25 +12,25 @@
 
 <div align="center">
 <h4><a href="#数据集&样例">数据集 & 样例</a>
-｜<a href="#数据集工具">数据集工具</a>
+｜<a href="#数据集管道">数据集管道</a>
 ｜<a href="#配音模型">配音模型</a>
 ｜<a href="#近期更新">近期更新</a>
 ｜<a href="#社区交流">社区交流</a>
 </h4>
 </div>
 
-**FunCineForge** 包含一个生产大规模配音数据集的端到端数据集工具，和一个基于多模态大模型的配音模型，该模型专为多样的电影场景而设计。利用该工具，我们构建了首个大规模中文电视剧配音数据集，该数据集包含丰富的标注和多样化的场景。在独白、旁白、对话和多说话人场景中，我们的配音模型在音频质量、唇形同步、音色转换和指令遵循等方面全部优于最先进的方法。
+**FunCineForge** 包含一个生产大规模配音数据集的端到端数据集管道，和一个基于多模态大模型的配音模型，该模型专为多样的电影场景而设计。利用该管道，我们构建了首个大规模中文电视剧配音数据集，该数据集包含丰富的标注和多样化的场景。在独白、旁白、对话和多说话人场景中，我们的配音模型在音频质量、唇形同步、音色转换和指令遵循等方面全部优于最先进的方法。
 
 <a name="数据集&样例"></a>
 ## 数据集 & 样例 🎬
 您可以访问此 [网站]() 获取我们的数据集样本和演示样本。
 
-<a name="数据集工具"></a>
-## 数据集工具 🔨
+<a name="数据集管道"></a>
+## 数据集管道 🔨
 
 ### 环境安装
 
-FunCineForge 的运行仅依赖于一个 Python 环境。
+FunCineForge 数据集管道工具包的运行仅依赖于一个 Python 环境。
 ```shell
 # Conda
 git clone git@github.com:FunAudioLLM/FunCineForge.git
@@ -93,7 +93,7 @@ python build_datasets.py --root_dir datasets/clean/zh --out_dir datasets/clean -
 
 <a name="近期更新"></a>
 ## 近期更新 🚀
-- 2025/12/18：FunCineForge toolkit 源代码上线！🔥
+- 2025/12/18：FunCineForge 数据集管道工具包上线！🔥
 - 2026/01/17：发布演示样例和数据集样本。 🔥
 
 
