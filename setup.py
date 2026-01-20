@@ -108,7 +108,7 @@ def download_huggingface_models():
             local_dir=str(temp_path),
             resume_download=True,
             force_download=False,
-            ignore_patterns=["*.md", "*.txt", ".git*"],
+            ignore_patterns=["*.md", ".git*"],
             token=None,
             repo_type="model",
         )   
