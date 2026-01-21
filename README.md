@@ -1,6 +1,9 @@
 ### <p align="center">「English | [简体中文](./README_zh.md)」</p>
 
-**<p align="center"> 🎬 FunCineForge: A Unified Dataset Pipeline and Model for Zero-Shot Movie Dubbing in Diverse Cinematic Scenes </p>**
+<p align="center">
+<b>🎬 FunCineForge: A Unified Dataset Pipeline and Model for Zero-Shot Movie Dubbing<br>
+in Diverse Cinematic Scenes</b>
+</p>
 
 <div align="center">
 

@@ -1,6 +1,8 @@
 ### <p align="center">「[English](./README.md) | 简体中文」</p>
 
-**<p align="center"> 🎬 FunCineForge：一种用于多样化影视场景零样本配音的统一数据集管道与模型 </p>**
+<p align="center">
+<b>🎬 FunCineForge：一种用于多样化影视场景零样本配音的统一数据集管道与模型</b>
+</p>
 
 <div align="center">
 
