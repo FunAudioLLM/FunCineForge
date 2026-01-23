@@ -1158,9 +1158,7 @@
             <div class="scene-content hidden" id="scene-timbre">
                 <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-8 mb-12">
                     <div class="mb-10">
-                        <h4 class="text-center text-xl font-bold text-purple-600 mb-4">
-                            Reference Audio (Timbre)
-                        </h4>
+                        <h4 class="text-center text-xl font-bold text-purple-600 mb-4" data-i18n="reference_audio"></h4>
                         <div class="flex justify-center">
                             <audio controls class="w-full md:w-2/3"><source src="https://speech-lab-share-data.oss-cn-shanghai.aliyuncs.com/FunCineForge/timbre-cloning/reference.wav" type="audio/wav"></audio>
                         </div>
@@ -1364,6 +1362,13 @@
                             Six expeditions to Qishan, with the first battle being unfavorable. An omen, cough, an ominous sign! Prime Minister need not be anxious, for victory and defeat are common occurrences in warfare."
                         </div>
                     </div>
+                    <div class="mt-4 p-4 bg-yellow-50 border border-yellow-200 rounded-md">
+                        <p class="text-sm text-yellow-800">
+                            <i class="fas fa-exclamation-triangle mr-2"></i>
+                            <strong data-i18n="dataset_notice_title"></strong>
+                            <span data-i18n="timbre_notice_text"></span>
+                        </p>
+                    </div>
                 </div>
             </div>
 
@@ -1532,6 +1537,13 @@
                             Although Ah Ge has two younger brothers, they are raised separately, so he is inevitably lonely. With an Empress like you, I feel relieved. 
                             I am powerless, unable to raise Ah Ge to adulthood for the Emperor. My sister died giving birth to Ah Ge's younger brother."
                         </div>
+                    </div>
+                    <div class="mt-4 p-4 bg-yellow-50 border border-yellow-200 rounded-md">
+                        <p class="text-sm text-yellow-800">
+                            <i class="fas fa-exclamation-triangle mr-2"></i>
+                            <strong data-i18n="dataset_notice_title"></strong>
+                            <span data-i18n="clue_notice_text"></span>
+                        </p>
                     </div>
                 </div>
             </div>
@@ -1709,11 +1721,19 @@
             <p class="mb-4 text-gray-700" data-i18n="cite_notice"></p>
             
             <div class="bg-slate-800 text-gray-300 p-6 rounded-lg font-mono text-sm overflow-x-auto shadow-inner">
-                <pre>Technical details will be released soon.</pre>
+<pre>
+@misc{liu2026funcineforgeunifieddatasettoolkit,
+    title={FunCineForge: A Unified Dataset Toolkit and Model for Zero-Shot Movie Dubbing in Diverse Cinematic Scenes}, 
+    author={Jiaxuan Liu and Yang Xiang and Han Zhao and Xiangang Li and Zhenhua Ling},
+    year={2026},
+    eprint={2601.14777},
+    archivePrefix={arXiv},
+    primaryClass={cs.CV},
+}</pre>
             </div>
             
             <div class="mt-6 flex gap-4">
-                <a href="#" class="flex items-center gap-2 text-gray-600 hover:text-blue-600 transition"><i class="far fa-file-pdf"></i> Paper PDF</a>
+                <a href="https://arxiv.org/abs/2601.14777" class="flex items-center gap-2 text-gray-600 hover:text-blue-600 transition"><i class="far fa-file-pdf"></i> Paper PDF</a>
                 <a href="https://github.com/FunAudioLLM/FunCineForge" class="flex items-center gap-2 text-gray-600 hover:text-blue-600 transition"><i class="fab fa-github"></i> Code </a>
             </div>
         </div>
@@ -1788,7 +1808,7 @@
             <p class="mb-4 text-xl font-bold text-white">FunCineForge</p>
             <p class="text-sm mb-6">Exploring the End-to-end Production Pipeline for Large-scale Dubbing Datasets and Multimodal Dubbing Models for Diverse Cinematic Scenes.</p>
             <div class="text-xs text-gray-600">
-                &copy; Alibaba's Tongyi Lab Speech Team & University of Science and Technology of China. All rights reserved. <br>
+                &copy; Tongyi Lab Speech Team, Tongyi Lab, Alibaba Group & NERCSLIP, University of Science and Technology of China. All rights reserved. <br>
             </div>
         </div>
     </footer>
@@ -1826,6 +1846,7 @@ const i18n = {
     demo_desc5:"“其他”小节列举了一些特殊案例。",
     synthetic:"合成样本",
     real:"真实样本",
+    reference_audio:"参考音频（音色）",
     clue1:"合成样本（线索 1）",
     clue2:"合成样本（线索 2）",
     dataset_sample:"数据样例",
@@ -1836,6 +1857,8 @@ const i18n = {
     download:"下载",
     dataset_notice_title: "声明：",
     dataset_notice_text: "发布的单部影视剧数据集样例仅作参考，我们剔除了视频内容以保护版权，下载即代表您同意遵循我们的用户协议。",
+    timbre_notice_text: "参考音频应与视觉中说话人侧写，如性别、年龄，保证潜在一致性。",
+    clue_notice_text: "线索应与参考音频、面部和文本应保证潜在一致性，实验发现语音音色和风格更多取决于参考音频，情感和语气部分依赖线索辅助信息。",
     cite_notice: "如果您使用了我们的数据集或代码，请引用以下论文：",
     Q1: "Q：数据集如何解压？",
     A1: "A：请使用 7zip 工具进行解压，命令如下：",
@@ -1869,6 +1892,7 @@ const i18n = {
     demo_desc5:"and “Other” section lists several special cases.",
     synthetic:"Synthesized Sample",
     real:"Ground Truth",
+    reference_audio:"Reference Audio (Timbre)",
     clue1:"Synthesized Sample (Clue 1)",
     clue2:"Synthesized Sample (Clue 2)",
     dataset_sample:"Dataset Sample",
@@ -1879,6 +1903,8 @@ const i18n = {
     download:"Download",
     dataset_notice_title: "Notice:",
     dataset_notice_text: "The released dataset samples of a single TV drama are for reference only. Video content has been removed to protect copyright. By downloading the data, you agree to comply with our usage agreement.",
+    timbre_notice_text: "The reference audio should maintain potential consistency with speaker's profile such as gender and age in the visual content.",
+    clue_notice_text: "Clues should maintain potential consistency with reference audio, facial features, and text. Experiments show that voice timbre and style are more dependent on the reference audio, while emotion and tone rely partially on clue auxiliary information.",
     cite_notice: "If you use our dataset or code, please cite the following paper:",
     Q1: "Q: How to decompress the dataset?",
     A1: "A: Please use the 7zip tool to decompress, the command is as follows:",
