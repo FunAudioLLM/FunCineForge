@@ -224,6 +224,7 @@
             <p class="text-xl text-gray-600" data-i18n="demo_desc2"></p>
             <p class="text-xl text-gray-600" data-i18n="demo_desc3"></p>
             <p class="text-xl text-gray-600" data-i18n="demo_desc4"></p>
+            <p class="text-xl text-gray-600" data-i18n="demo_desc5"></p>
             </div>
 
             <!-- Scene Tabs -->
@@ -252,6 +253,11 @@
                     class="scene-btn px-5 py-2 rounded-full text-sm font-semibold bg-white text-gray-700 border border-gray-300 hover:bg-gray-100 transition"
                     data-scene="timbre">
                     Timbre Cloning
+                </button>
+                <button
+                    class="scene-btn px-5 py-2 rounded-full text-sm font-semibold bg-white text-gray-700 border border-gray-300 hover:bg-gray-100 transition"
+                    data-scene="clue">
+                    Clue Control
                 </button>
                 <button
                     class="scene-btn px-5 py-2 rounded-full text-sm font-semibold bg-white text-gray-700 border border-gray-300 hover:bg-gray-100 transition"
@@ -1361,6 +1367,175 @@
                 </div>
             </div>
 
+            <div class="scene-content hidden" id="scene-clue">
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-8 mb-12">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-6 relative">
+                        <h4 class="text-center text-2xl font-bold text-blue-600 tracking-wide" data-i18n="clue1"></h4>
+                        <h4 class="text-center text-2xl font-bold text-blue-600 tracking-wide" data-i18n="clue2"></h4>
+                        <h4 class="text-center text-2xl font-bold text-green-600 tracking-wide" data-i18n="real"></h4>
+                    </div>
+
+                    <div class="mb-10">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 relative">
+                            <div class="rounded-xl overflow-hidden demo-video aspect-video border border-blue-100">
+                            <video controls class="w-full h-full object-contain"><source src="https://speech-lab-share-data.oss-cn-shanghai.aliyuncs.com/FunCineForge/clue/narration_1.mp4" type="video/mp4"></video>
+                            </div>
+                            <div class="rounded-xl overflow-hidden demo-video aspect-video border border-green-100">
+                            <video controls class="w-full h-full object-contain"><source src="https://speech-lab-share-data.oss-cn-shanghai.aliyuncs.com/FunCineForge/clue/narration_2.mp4" type="video/mp4"></video>
+                            </div>
+                            <div class="rounded-xl overflow-hidden demo-video aspect-video border border-green-100">
+                            <video controls class="w-full h-full object-contain"><source src="https://speech-lab-share-data.oss-cn-shanghai.aliyuncs.com/FunCineForge/clue/narration_gt.mp4" type="video/mp4"></video>
+                            </div>
+                        </div>
+
+                        <!-- Clue + Text -->
+                        <div class="mt-2 text-sm text-gray-700 leading-relaxed">
+                            <span class="font-semibold text-gray-900">Clue 1 + Text:</span>
+                            “&lt;|startofclue|&gt;一位中老年男性，声音沉稳浑厚，以平静叙述的语调描述了两位神仙在仙山之间高谈阔论的场景。情感为中性、平稳，带有故事的引入感。&lt;|endofclue|&gt;
+                            当日，有两位神仙，时而凭风遨游，时而高谈阔论，来往于仙山缥缈之间，说这些真假有无之事。”
+                        </div>
+                        <div class="mt-2 text-sm text-gray-700 leading-relaxed">
+                            <span class="font-semibold text-gray-900">Clue 1 + Text (Translation):</span>
+                            "&lt;|startofclue|&gt;A middle-aged male, with a steady and rich voice, described the scene of two immortals engaging in profound discussions between the fairy mountains in a calm narrative tone. 
+                            The emotion is neutral and steady, with a sense of introduction to the story.&lt;|endofclue|&gt;
+                            On that day, there were two immortals, sometimes soaring with the wind, sometimes engaging in profound discussions, traveling between the ethereal fairy mountains, discussing matters of truth and falsity, existence and non-existence."
+                        </div>
+                        <div class="mt-2 text-sm text-gray-700 leading-relaxed">
+                            <span class="font-semibold text-gray-900">Clue 2 + Text:</span>
+                            “&lt;|startofclue|&gt;一位中老年男性，声音庄严大气，浑厚高昂，有顿挫感，讲述两位神仙在仙山之间高谈阔论的场景。情感中透着欢快与兴致。&lt;|endofclue|&gt;
+                            当日，有两位神仙，时而凭风遨游，时而高谈阔论，来往于仙山缥缈之间，说这些真假有无之事。”
+                        </div>
+                        <div class="mt-2 text-sm text-gray-700 leading-relaxed">
+                            <span class="font-semibold text-gray-900">Clue 2 + Text (Translation):</span>
+                            "&lt;|startofclue|&gt;A middle-aged male, with a solemn and majestic voice, deep and resonant, with a sense of cadence, narrates the scene of two immortals engaging in profound discussions between the fairy mountains. The emotion is filled with joy and interest.&lt;|endofclue|&gt;
+                            On that day, there were two immortals, sometimes soaring with the wind, sometimes engaging in profound discussions, traveling between the ethereal fairy mountains, discussing matters of truth and falsity, existence and non-existence."
+                        </div>
+                    </div>
+
+                    <div class="mb-10">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 relative">
+                            <div class="rounded-xl overflow-hidden demo-video aspect-video border border-blue-100">
+                            <video controls class="w-full h-full object-contain"><source src="https://speech-lab-share-data.oss-cn-shanghai.aliyuncs.com/FunCineForge/clue/monologue_1.mp4" type="video/mp4"></video>
+                            </div>
+                            <div class="rounded-xl overflow-hidden demo-video aspect-video border border-green-100">
+                            <video controls class="w-full h-full object-contain"><source src="https://speech-lab-share-data.oss-cn-shanghai.aliyuncs.com/FunCineForge/clue/monologue_2.mp4" type="video/mp4"></video>
+                            </div>
+                            <div class="rounded-xl overflow-hidden demo-video aspect-video border border-green-100">
+                            <video controls class="w-full h-full object-contain"><source src="https://speech-lab-share-data.oss-cn-shanghai.aliyuncs.com/FunCineForge/clue/monologue_gt.mp4" type="video/mp4"></video>
+                            </div>
+                        </div>
+
+                        <!-- Clue + Text -->
+                        <div class="mt-2 text-sm text-gray-700 leading-relaxed">
+                            <span class="font-semibold text-gray-900">Clue 1 + Text:</span>
+                            “&lt;|startofclue|&gt;一位中年女性角色情绪委屈悲伤，音色柔弱，带有哭腔，表达对现状的不满和悲哀。&lt;|endofclue|&gt;
+                            臣妾很想知足，可是臣妾做不到啊！”
+                        </div>
+                        <div class="mt-2 text-sm text-gray-700 leading-relaxed">
+                            <span class="font-semibold text-gray-900">Clue 1 + Text (Translation):</span>
+                            "&lt;|startofclue|&gt;A middle-aged female character expresses her grievances and sadness with a soft and tearful tone, expressing her dissatisfaction and lamentation towards the current situation.&lt;|endofclue|&gt;
+                            I really want to be content, but I can't!"
+                        </div>
+                        <div class="mt-2 text-sm text-gray-700 leading-relaxed">
+                            <span class="font-semibold text-gray-900">Clue 2 + Text:</span>
+                            “&lt;|startofclue|&gt;一位中年女性角色情绪生气愤怒，强烈表达对命运的不公与无奈。&lt;|endofclue|&gt;
+                            臣妾很想知足，可是臣妾做不到啊！”
+                        </div>
+                        <div class="mt-2 text-sm text-gray-700 leading-relaxed">
+                            <span class="font-semibold text-gray-900">Clue 2 + Text (Translation):</span>
+                            "&lt;|startofclue|&gt;A middle-aged female character is angry and furious, strongly expressing her dissatisfaction and helplessness towards fate.&lt;|endofclue|&gt;
+                            I really want to be content, but I can't!"
+                        </div>
+                    </div>
+
+                    <div class="mb-10">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 relative">
+                            <div class="rounded-xl overflow-hidden demo-video aspect-video border border-blue-100">
+                            <video controls class="w-full h-full object-contain"><source src="https://speech-lab-share-data.oss-cn-shanghai.aliyuncs.com/FunCineForge/clue/dialogue2_1.mp4" type="video/mp4"></video>
+                            </div>
+                            <div class="rounded-xl overflow-hidden demo-video aspect-video border border-green-100">
+                            <video controls class="w-full h-full object-contain"><source src="https://speech-lab-share-data.oss-cn-shanghai.aliyuncs.com/FunCineForge/clue/dialogue2_2.mp4" type="video/mp4"></video>
+                            </div>
+                            <div class="rounded-xl overflow-hidden demo-video aspect-video border border-green-100">
+                            <video controls class="w-full h-full object-contain"><source src="https://speech-lab-share-data.oss-cn-shanghai.aliyuncs.com/FunCineForge/clue/dialogue2_gt.mp4" type="video/mp4"></video>
+                            </div>
+                        </div>
+
+                        <!-- Clue + Text -->
+                        <div class="mt-2 text-sm text-gray-700 leading-relaxed">
+                            <span class="font-semibold text-gray-900">Clue 1 + Text:</span>
+                            “&lt;|startofclue|&gt;第一位中年男性三次急切呼唤，语带焦急，语气强烈。第二位中年男性沉稳坚定，表达出投奔大事的决心。第三位中年男性声音平稳，语气激昂和坚定，展现出宁负天下不负我的霸道和决绝。整体情绪由焦急转为坚定，再到愤慨。&lt;|endofclue|&gt;
+                            公台，公台，公台！我愿弃死县令，随公去图大事。宁叫我负天下人，休叫天下人负我！”
+                        </div>
+                        <div class="mt-2 text-sm text-gray-700 leading-relaxed">
+                            <span class="font-semibold text-gray-900">Clue 1 + Text (Translation):</span>
+                            "&lt;|startofclue|&gt;The first middle-aged man called out urgently three times, his voice filled with anxiety and his tone was strong.
+                            The second middle-aged man, calm and resolute, expressed his determination to pursue great undertakings. 
+                            The third middle-aged man spoke in a steady voice, with an impassioned and firm tone, exhibiting a domineering and resolute attitude of 'I would rather betray the world than let the world betray me'.
+                            The overall emotion shifted from anxiety to determination, and then to indignation.&lt;|endofclue|&gt;
+                            Public platform, public platform, public platform! I am willing to give up my position as a county magistrate and follow you to pursue great things. I would rather let me betray the world than let the world betray me! ”
+                        </div>
+                        <div class="mt-2 text-sm text-gray-700 leading-relaxed">
+                            <span class="font-semibold text-gray-900">Clue 2 + Text:</span>
+                            “&lt;|startofclue|&gt;第一位中年男性三次急切呼唤，语气焦急，三次的语气越来越重。第二位中年男性沉稳坚定，表达出投奔大事的决心。第三位中年男性声音低沉，语气非常激昂和坚定，展现出宁负天下不负我的霸道和决绝。整体情绪由焦急转为坚定，再到愤慨。&lt;|endofclue|&gt;
+                            公台，公台，公台！我愿弃死县令，随公去图大事。宁叫我负天下人，休叫天下人负我！”
+                        </div>
+                        <div class="mt-2 text-sm text-gray-700 leading-relaxed">
+                            <span class="font-semibold text-gray-900">Clue 2 + Text (Translation):</span>
+                            "&lt;|startofclue|&gt;The first middle-aged man called out urgently three times, his tone growing increasingly anxious and emphatic. 
+                            The second middle-aged man, calm and determined, expressed his resolve to pursue great undertakings. 
+                            The third man's voice was low, yet his tone was vehement and resolute, showing his domineering and resolute attitude of 'I would rather betray the world than let the world betray me'. 
+                            The overall emotion shifted from anxiety to determination, and then to indignation.&lt;|endofclue|&gt;
+                            Public platform, public platform, public platform! I am willing to give up my life as a county magistrate and follow you to pursue great undertakings. I would rather let me betray the world than let the world betray me!"
+                        </div>
+                    </div>
+
+                    <div class="mb-10">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 relative">
+                            <div class="rounded-xl overflow-hidden demo-video aspect-video border border-blue-100">
+                            <video controls class="w-full h-full object-contain"><source src="https://speech-lab-share-data.oss-cn-shanghai.aliyuncs.com/FunCineForge/clue/dialogue_1.mp4" type="video/mp4"></video>
+                            </div>
+                            <div class="rounded-xl overflow-hidden demo-video aspect-video border border-green-100">
+                            <video controls class="w-full h-full object-contain"><source src="https://speech-lab-share-data.oss-cn-shanghai.aliyuncs.com/FunCineForge/clue/dialogue_2.mp4" type="video/mp4"></video>
+                            </div>
+                            <div class="rounded-xl overflow-hidden demo-video aspect-video border border-green-100">
+                            <video controls class="w-full h-full object-contain"><source src="https://speech-lab-share-data.oss-cn-shanghai.aliyuncs.com/FunCineForge/clue/dialogue_gt.mp4" type="video/mp4"></video>
+                            </div>
+                        </div>
+
+                        <!-- Clue + Text -->
+                        <div class="mt-2 text-sm text-gray-700 leading-relaxed">
+                            <span class="font-semibold text-gray-900">Clue 1 + Text:</span>
+                            “&lt;|startofclue|&gt;女性角色声音温柔，忧虑阿哥的孤苦，对未能抚养大阿哥成人和姐妹福薄而死感到自责和哀伤。男性角色皇上语气平静沉稳，表达了对皇额娘的信任。整体情感从温柔悲伤到平静再到自责。&lt;|endofclue|&gt;
+                            阿哥虽然有两个弟弟，可是各自养在别处，他一个人难免孤苦啊。有你这样的皇额娘，朕就放心了。臣妾无能，臣妾不能为皇上抚养大阿哥成人。姐姐又因为生育二阿哥而死。”
+                        </div>
+                        <div class="mt-2 text-sm text-gray-700 leading-relaxed">
+                            <span class="font-semibold text-gray-900">Clue 1 + Text (Translation):</span>
+                            "&lt;|startofclue|&gt;The female character, speaks softly, worrying about the loneliness of Ah Ge. 
+                            She feels remorse and sorrow for not being able to raise Ah Ge to adulthood and for her sisters' unfortunate deaths. 
+                            The male character, the Emperor, speaks calmly and steadily, expressing his trust in his Empress. 
+                            The overall emotion shifts from gentle sadness to calmness, and then to remorse.&lt;|endofclue|&gt;
+                            Although Ah Ge has two younger brothers, they are raised separately, so he is inevitably lonely. With an Empress like you, I feel relieved. 
+                            I am powerless, unable to raise Ah Ge to adulthood for the Emperor. My sister died giving birth to Ah Ge's younger brother.”
+                        </div>
+                        <div class="mt-2 text-sm text-gray-700 leading-relaxed">
+                            <span class="font-semibold text-gray-900">Clue 2 + Text:</span>
+                            “&lt;|startofclue|&gt;女性角色声音尖锐，对阿哥的孤苦感到生气愤怒，对未能抚养大阿哥成人和姐妹福薄而死感到自责和哀伤。男性角色皇上语气平静沉稳，表达了对皇额娘的信任。整体情感从生气愤怒到平静再到自责。&lt;|endofclue|&gt;
+                            阿哥虽然有两个弟弟，可是各自养在别处，他一个人难免孤苦啊。有你这样的皇额娘，朕就放心了。臣妾无能，臣妾不能为皇上抚养大阿哥成人。姐姐又因为生育二阿哥而死。”
+                        </div>
+                        <div class="mt-2 text-sm text-gray-700 leading-relaxed">
+                            <span class="font-semibold text-gray-900">Clue 2 + Text (Translation):</span>
+                            "&lt;|startofclue|&gt;The female character, has a sharp voice, feeling angry and furious towards Ah Ge's loneliness. 
+                            She feels remorse and sorrow for not being able to raise Ah Ge to adulthood and for her sisters' unfortunate deaths. 
+                            The male character, the Emperor, speaks calmly and steadily, expressing his trust in his Empress. 
+                            The overall emotion shifts from anger to calmness, and then to remorse.&lt;|endofclue|&gt;
+                            Although Ah Ge has two younger brothers, they are raised separately, so he is inevitably lonely. With an Empress like you, I feel relieved. 
+                            I am powerless, unable to raise Ah Ge to adulthood for the Emperor. My sister died giving birth to Ah Ge's younger brother."
+                        </div>
+                    </div>
+                </div>
+            </div>
+
 
             <div class="scene-content hidden" id="scene-other">
                 <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-8 mb-12">
@@ -1647,9 +1822,12 @@ const i18n = {
     demo_desc:"合成样本与真实样本在四种影视场景下的对比展示，",
     demo_desc2:"合成样本是由合成语音与真实的静音视频片段配对而成。",
     demo_desc3:"“音色克隆”小节展示了使用同一参考音频进行音色克隆的几个示例，",
-    demo_desc4:"“其他”小节列举了一些特殊案例。",
+    demo_desc4:"“线索控制”小节展示了调整线索的几个示例，",
+    demo_desc5:"“其他”小节列举了一些特殊案例。",
     synthetic:"合成样本",
     real:"真实样本",
+    clue1:"合成样本（线索 1）",
+    clue2:"合成样本（线索 2）",
     dataset_sample:"数据样例",
     dataset_size:"大小",
     dataset_license:"许可协议",
@@ -1687,9 +1865,12 @@ const i18n = {
     demo_desc:"Comparison between synthesized and ground truth samples across four cinematic scenes,",
     demo_desc2:"where synthesized samples are created by pairing synthesized speech with real silent video clips.",
     demo_desc3:"“Timbre Cloning” section shows several examples of timbre cloning using the same reference audio,",
-    demo_desc4:"and “Other” section lists several special cases.",
+    demo_desc4:"“Clue Control” section shows several examples of cases where the clues have been adjusted,",
+    demo_desc5:"and “Other” section lists several special cases.",
     synthetic:"Synthesized Sample",
     real:"Ground Truth",
+    clue1:"Synthesized Sample (Clue 1)",
+    clue2:"Synthesized Sample (Clue 2)",
     dataset_sample:"Dataset Sample",
     dataset_size:"Size",
     dataset_license:"License",
