@@ -18,6 +18,7 @@ in Diverse Cinematic Scenes</b>
 ｜<a href="#Dataset-Pipeline">Dataset Pipeline</a>
 ｜<a href="#Dubbing-Model">Dubbing Model</a>
 ｜<a href="#Recent-Updates">Recent Updates</a>
+｜<a href="#Publication">Publication</a>
 ｜<a href="#Comminicate">Comminicate</a>
 </h4>
 </div>
@@ -38,7 +39,7 @@ FunCineForge dataset pipeline toolkit only relies on a Python environment to run
 ```shell
 # Conda
 git clone git@github.com:FunAudioLLM/FunCineForge.git
-conda create -n FunCineForge python=3.8.20 -y && conda activate FunCineForge
+conda create -n FunCineForge python=3.10 -y && conda activate FunCineForge
 sudo apt-get install ffmpeg
 # Initial settings
 cd FunCineForge
@@ -103,6 +104,21 @@ Please stay tuned.
 ## Recent Updates 🚀
 - 2025/12/18: FunCineForge dataset pipeline toolkit is online! 🔥
 - 2026/01/19: Demo samples and dataset samples released. 🔥
+- 2026/01/25：Fix some environmental and operational issues.
+
+<a name="Publication"></a>
+## Publication 📚
+If you use our dataset or code, please cite the following paper:
+<pre>
+@misc{liu2026funcineforgeunifieddatasettoolkit,
+    title={FunCineForge: A Unified Dataset Toolkit and Model for Zero-Shot Movie Dubbing in Diverse Cinematic Scenes}, 
+    author={Jiaxuan Liu and Yang Xiang and Han Zhao and Xiangang Li and Zhenhua Ling},
+    year={2026},
+    eprint={2601.14777},
+    archivePrefix={arXiv},
+    primaryClass={cs.CV},
+}
+</pre>
 
 
 

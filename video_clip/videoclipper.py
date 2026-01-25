@@ -1,8 +1,8 @@
 import os
-import sys
 import librosa
-import logging
 import argparse
+from concurrent.futures import ProcessPoolExecutor
+import multiprocessing as mp
 from moviepy.editor import VideoFileClip
 import concurrent.futures
 from utils.subtitle_utils import generate_srt, generate_srt_clip
@@ -11,9 +11,10 @@ from utils.trans_utils import write_state, load_state, convert_pcm_to_float
 from funasr import AutoModel
 # If you find that the generated srt file is too fragmented, you need to add "if punc_id > 2:" to line 167 after "sentence_text += punc_list[punc_id - 2]" in funasr 1.2.7 funasr.utils.timestamp_tools file.
 
+
 class VideoClipper():
     def __init__(self, funasr_model):
-        logging.info("Initializing VideoClipper.")
+        print("Initializing VideoClipper.")
         self.funasr_model = funasr_model
         self.GLOBAL_COUNT = 0
         self.lang = 'zh'
@@ -29,39 +30,42 @@ class VideoClipper():
         # assert sr == 16000, "16kHz sample rate required, {} given.".format(sr)
         if sr != 16000: # resample with librosa
             data = librosa.resample(data, orig_sr=sr, target_sr=16000)
+            sr = 16000
         if len(data.shape) == 2:  # multi-channel wav input
-            logging.warning("Input wav shape: {}, mean channels.".format(data.shape))
             data = data.mean(axis=1)
         state['audio_input'] = (sr, data)
         if sd_switch == 'yes':
-            rec_result = self.funasr_model.generate(data, 
-                                                    return_spk_res=True,
-                                                    return_raw_text=True, 
-                                                    is_final=True,
-                                                    output_dir=output_dir, 
-                                                    hotword=hotwords, 
-                                                    pred_timestamp=self.lang=='en',
-                                                    en_post_proc=self.lang=='en',
-                                                    cache={},
-                                                    merge_vad=True,               # 开启 VAD 合并
-                                                    merge_length_s=30             # 设置合并目标段最大长度（秒）
-                                                    )
+            rec_result = self.funasr_model.generate(
+                data, 
+                return_spk_res=True,
+                return_raw_text=True, 
+                is_final=True,
+                output_dir=output_dir, 
+                hotword=hotwords, 
+                pred_timestamp=self.lang=='en',
+                en_post_proc=self.lang=='en',
+                cache={},
+                merge_vad=True,               # 开启 VAD 合并
+                merge_length_s=30             # 设置合并目标段最大长度（秒）
+            )
             res_srt = generate_srt(rec_result[0]['sentence_info'])
         else:
-            rec_result = self.funasr_model.generate(data, 
-                                                    return_spk_res=False, 
-                                                    sentence_timestamp=True, 
-                                                    return_raw_text=True, 
-                                                    is_final=True, 
-                                                    hotword=hotwords,
-                                                    output_dir=output_dir,
-                                                    pred_timestamp=self.lang=='en',
-                                                    en_post_proc=self.lang=='en',
-                                                    cache={},
-                                                    merge_vad=True,               # 开启 VAD 合并
-                                                    merge_length_s=30             # 设置合并目标段最大长度（秒）
-                                                    )
+            rec_result = self.funasr_model.generate(
+                data, 
+                return_spk_res=False, 
+                sentence_timestamp=True, 
+                return_raw_text=True, 
+                is_final=True, 
+                hotword=hotwords,
+                output_dir=output_dir,
+                pred_timestamp=self.lang=='en',
+                en_post_proc=self.lang=='en',
+                cache={},
+                merge_vad=True,               # 开启 VAD 合并
+                merge_length_s=30             # 设置合并目标段最大长度（秒）
+            )
             res_srt = generate_srt(rec_result[0]['sentence_info'])
+            
         state['recog_res_raw'] = rec_result[0]['raw_text']
         state['timestamp'] = rec_result[0]['timestamp']
         state['sentences'] = rec_result[0]['sentence_info']
@@ -84,19 +88,15 @@ class VideoClipper():
             audio_file = base_name + '.wav'
 
         if video.audio is None:
-            logging.error("No audio information found.")
-            sys.exit(1)
+            raise ValueError("No audio information found.")
         
         video.audio.write_audiofile(audio_file, verbose=False, logger=None)
-        wav = librosa.load(audio_file, sr=16000)[0]
+        wav, sr = librosa.load(audio_file, sr=16000)
         if os.path.exists(audio_file):
             os.remove(audio_file)
-        state = {
-            'video_filename': video_filename
-        }
         video.close()
         del video
-        return self.recog((16000, wav), sd_switch, state, hotwords, output_dir)
+        return self.recog((sr, wav), sd_switch, {'video_filename': video_filename}, hotwords, output_dir)
 
     def video_clip(self, state, output_dir=None):
         """
@@ -116,7 +116,6 @@ class VideoClipper():
         srt_index = 1
         time_acc_ost = 0.0
 
-        # If there are timestamps, proceed with video clipping
         if len(ts):
             time_acc_ost = 0.0
             for i, (start, end, speaker_id) in enumerate(ts):
@@ -141,7 +140,6 @@ class VideoClipper():
                 audio_filepath = clip_filepath + '.wav'
                 clip_srt_file = clip_filepath + '.srt'
                 if not (os.path.exists(video_filepath) and os.path.exists(audio_filepath) and os.path.exists(clip_srt_file)):
-                    print(f"[CLIP] {video_filepath}.")
                     with VideoFileClip(video_filename) as video:
                         sub = video.subclip(start, end)
                         sub.write_videofile(video_filepath, audio_codec="aac", verbose=False, logger=None)
@@ -159,42 +157,78 @@ class VideoClipper():
             message = "[WARNING] No valid periods found in the speech."
 
         return message
+    
+def init_models(lang='zh'):
+    if lang == 'zh':
+        funasr_model = AutoModel(
+            model="iic/speech_seaco_paraformer_large_asr_nat-zh-cn-16k-common-vocab8404-pytorch",
+            vad_model="damo/speech_fsmn_vad_zh-cn-16k-common-pytorch",
+            punc_model="damo/punc_ct-transformer_zh-cn-common-vocab272727-pytorch",
+            spk_model="damo/speech_campplus_sv_zh-cn_16k-common",
+            device="cpu"
+        )
+    elif lang == 'en':
+        funasr_model = AutoModel(
+            model="iic/speech_paraformer_asr-en-16k-vocab4199-pytorch",
+            vad_model="damo/speech_fsmn_vad_zh-cn-16k-common-pytorch",
+            punc_model="damo/punc_ct-transformer_cn-en-common-vocab471067-large",
+            spk_model="damo/speech_campplus_sv_zh-cn_16k-common",
+            device="cpu"
+        )
+    else:
+        raise ValueError(f"Unsupported language: {lang}")
+    return funasr_model
+
+_process_local = None
+def _init_worker(lang: str):
+    global _process_local
+    if _process_local is None:
+        _process_local = {'model': init_models(lang)}
 
 
-def runner(stage, file, sd_switch, output_dir, audio_clipper):
+def runner(stage, file, sd_switch, output_dir, lang):
+    global _process_local
+    if _process_local is None:
+        raise RuntimeError("Model not initialized!")
+    if stage == 1:
+        funasr_model = _process_local['model']
+    else:
+        funasr_model = None
+    audio_clipper = VideoClipper(funasr_model)
+    audio_clipper.lang = lang
+    
     audio_suffixs = ['.wav','.mp3','.aac','.m4a','.flac']
     video_suffixs = ['.mp4','.avi','.mkv','.flv','.mov','.webm','.ts','.mpeg']
-    _,ext = os.path.splitext(file)
-    if ext.lower() in audio_suffixs:
+    ext = os.path.splitext(file)[1].lower()
+    if ext in audio_suffixs:
         mode = 'audio'
-    elif ext.lower() in video_suffixs:
+    elif ext in video_suffixs:
         mode = 'video'
     else:
-        logging.error("Unsupported file format: {}\n\nplease choise one of the following: {}".format(file),audio_suffixs+video_suffixs)
-        sys.exit(1) # exit if the file is not supported
+        print(f"❌ Unsupported file format: {file}")
+        return
     while output_dir.endswith('/'):
         output_dir = output_dir[:-1]
-    if not os.path.exists(output_dir):
-        os.mkdir(output_dir)
+    os.makedirs(output_dir, exist_ok=True)
         
     if stage == 1:
         if mode == 'audio':
             wav, sr = librosa.load(file, sr=16000)
             res_text, res_srt, state = audio_clipper.recog((sr, wav), sd_switch)
-        if mode == 'video':
+        elif mode == 'video':
             res_text, res_srt, state = audio_clipper.video_recog(file, sd_switch)
         total_srt_file = output_dir + '/total.srt'
         with open(total_srt_file, 'w') as fout:
             fout.write(res_srt)
         write_state(output_dir, state)
-        print("Recognition successed. You can copy the text segment from below and use stage 2.")
+        print(f"✅ Stage 1 success: {total_srt_file}")
         
     if stage == 2:
         if mode == 'video':
             state = load_state(output_dir)
             state['video_filename'] = file
             message = audio_clipper.video_clip(state, output_dir=output_dir)
-            print("Clipping Log: {}".format(message))
+            print(f"✅ Stage 2 clip: {message}")
             
        
 def find_all_videos(folder, base_output_dir=None, skip_processed=True, suffixes=None):
@@ -205,54 +239,28 @@ def find_all_videos(folder, base_output_dir=None, skip_processed=True, suffixes=
         for file in files:
             if any(file.lower().endswith(ext) for ext in suffixes):
                 file_path = os.path.join(root, file)
-                
-                # 检查是否需要跳过已处理的文件
                 if skip_processed and base_output_dir is not None:
-                    # 构建预期的输出目录结构
                     parent_dir_name = os.path.basename(root)
                     video_name = os.path.splitext(file)[0]
                     output_subdir = os.path.join(base_output_dir, parent_dir_name, video_name)
-                    
-                    # 检查处理完成的标记文件
                     total_srt = os.path.join(output_subdir, 'total.srt')
-                    
-                    # 如果标记文件存在，则跳过已处理的文件
                     if os.path.exists(total_srt):
-                        print(f"Skipping already processed file: {file_path}")
+                        print(f"Skipping already processed: {file_path}")
                         continue
-                
                 all_videos.append(file_path)
     return all_videos
 
 
-def process_single_video(file, stage, sd_switch, base_output_dir, audio_clipper=None):
+def process_single_video(file, stage, sd_switch, base_output_dir, lang):
     try:
         video_name = os.path.splitext(os.path.basename(file))[0]
         parent_dir_name = os.path.basename(os.path.dirname(file))
         output_dir = os.path.join(base_output_dir, parent_dir_name, video_name)
         os.makedirs(output_dir, exist_ok=True)
-        
-        runner(stage=stage, file=file, sd_switch=sd_switch, output_dir=output_dir, audio_clipper=audio_clipper)
-        print(f"✅ Done: {file}")
+        runner(stage, file, sd_switch, output_dir, lang)
     except Exception as e:
-        logging.error(f"❌ Failed: {file}, error: {e}")
-        
-def init_models(lang='zh'):
-    if lang == 'zh':
-        funasr_model = AutoModel(
-            model="iic/speech_seaco_paraformer_large_asr_nat-zh-cn-16k-common-vocab8404-pytorch",
-            vad_model="damo/speech_fsmn_vad_zh-cn-16k-common-pytorch",
-            punc_model="damo/punc_ct-transformer_zh-cn-common-vocab272727-pytorch",
-            spk_model="damo/speech_campplus_sv_zh-cn_16k-common"
-        )
-    elif lang == 'en':
-        funasr_model = AutoModel(
-            model="iic/speech_paraformer_asr-en-16k-vocab4199-pytorch",
-            vad_model="damo/speech_fsmn_vad_zh-cn-16k-common-pytorch",
-            punc_model="damo/punc_ct-transformer_zh-cn-common-vocab272727-pytorch",
-            spk_model="damo/speech_campplus_sv_zh-cn_16k-common"
-        )
-    return funasr_model
+        print(f"❌ failed: {file}, error: {e}")
+    
 
 def get_parser():
     parser = ArgumentParser(
@@ -308,30 +316,31 @@ def main(cmd=None):
     stage = kwargs['stage']
     sd_switch = kwargs['sd_switch']
     output_dir = kwargs['output_dir']
+    skip_processed = kwargs['skip_processed']
     lang = kwargs['lang']
     
-    # Initialize models
-    if stage == 1:
-        funasr_model = init_models(lang)
-    else:
-        funasr_model = None
-    audio_clipper = VideoClipper(funasr_model)
-    audio_clipper.lang = lang
-    
     if os.path.isdir(file_or_folder):
-        all_videos = find_all_videos(file_or_folder, base_output_dir=output_dir, skip_processed=kwargs['skip_processed'])
+        all_videos = find_all_videos(file_or_folder, base_output_dir=output_dir, skip_processed=skip_processed)
         print(f"Found {len(all_videos)} video files.")
 
-        # 多线程并发处理
-        with concurrent.futures.ThreadPoolExecutor(max_workers=50) as executor:
-            futures = [executor.submit(process_single_video, file, stage, sd_switch, output_dir, audio_clipper)
+        with ProcessPoolExecutor(max_workers = max(1, (mp.cpu_count() * 3) // 4), initializer=_init_worker, initargs=(lang,)) as executor:
+            futures = [executor.submit(process_single_video, file, stage, sd_switch, output_dir, lang)
                        for file in all_videos]
-            concurrent.futures.wait(futures)
+            for future in concurrent.futures.as_completed(futures, timeout=10800):
+                try:
+                    future.result(timeout=10800)
+                except TimeoutError:
+                    print("[ERROR] time out.")
+                except Exception as e:
+                    print(f"[ERROR] {e}")
         print("✅ All videos processed.")
     else:
         # 单个文件处理
-        runner(stage=stage, file=file_or_folder, sd_switch=sd_switch, output_dir=output_dir, audio_clipper=audio_clipper)
+        _init_worker(lang)
+        runner(stage, file_or_folder, sd_switch, output_dir, lang)
+        print(f"✅ Done single file: {file_or_folder}")
 
 
 if __name__ == '__main__':
+    mp.set_start_method('spawn')
     main()
