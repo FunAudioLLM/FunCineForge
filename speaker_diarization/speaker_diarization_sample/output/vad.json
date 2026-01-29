@@ -1,0 +1,12 @@
+{
+  "sample_0.0_3.22": {
+    "file": "output/sample.wav",
+    "start": 0.0,
+    "stop": 3.22
+  },
+  "sample_4.51_9.38": {
+    "file": "output/sample.wav",
+    "start": 4.51,
+    "stop": 9.38
+  }
+}

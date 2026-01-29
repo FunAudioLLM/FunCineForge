@@ -45,6 +45,8 @@ hf_access_token is your access token
 bash run.sh --stage 1 --stop_stage 4 --hf_access_token hf_xxx --root datasets/clean/zh --gpus "0 1 2 3"
 ```
 
+To better understand the source code, you can refer to the **sample.mp4** and **run.sh** files in the subfolder **speaker_diarization_sample** to perform single-sample inference.
+
 ## Limitations
 - It may not perform well when the audio duration is too short and when the number of speakers is too large.
 - The final accuracy is highly dependent on the performance of each modules. Among them, the ASD model affects the quality of the results

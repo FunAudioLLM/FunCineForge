@@ -1,0 +1,52 @@
+{
+  "sample_0.0_1.5": {
+    "file": "output/sample.wav",
+    "start": 0.0,
+    "stop": 1.5
+  },
+  "sample_0.75_2.25": {
+    "file": "output/sample.wav",
+    "start": 0.75,
+    "stop": 2.25
+  },
+  "sample_1.5_3.0": {
+    "file": "output/sample.wav",
+    "start": 1.5,
+    "stop": 3.0
+  },
+  "sample_2.25_3.22": {
+    "file": "output/sample.wav",
+    "start": 2.25,
+    "stop": 3.22
+  },
+  "sample_4.51_6.01": {
+    "file": "output/sample.wav",
+    "start": 4.51,
+    "stop": 6.01
+  },
+  "sample_5.26_6.76": {
+    "file": "output/sample.wav",
+    "start": 5.26,
+    "stop": 6.76
+  },
+  "sample_6.01_7.51": {
+    "file": "output/sample.wav",
+    "start": 6.01,
+    "stop": 7.51
+  },
+  "sample_6.76_8.26": {
+    "file": "output/sample.wav",
+    "start": 6.76,
+    "stop": 8.26
+  },
+  "sample_7.51_9.01": {
+    "file": "output/sample.wav",
+    "start": 7.51,
+    "stop": 9.01
+  },
+  "sample_8.26_9.38": {
+    "file": "output/sample.wav",
+    "start": 8.26,
+    "stop": 9.38
+  }
+}
