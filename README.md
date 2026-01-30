@@ -81,16 +81,13 @@ python run.py --root datasets/clean/zh --gpus 0 1 2 3
 cd speaker_diarization
 bash run.sh --stage 1 --stop_stage 4 --hf_access_token hf_xxx --root datasets/clean/zh --gpus "0 1 2 3"
 ```
-- Based on a mllm, the system uses audio, ASR text, and RTTM files as input. It extracts emotional clues through thought chaining and uses the large model to correct the small model solution to reduce the ASR. It also annotates character age, gender, and timbre information. Experimental results show that the large-model + small-model solution reduces the WER from 3.2% to 0.6% and the speaker ID error rate from 4.3% to 1.2%, achieving quality comparable to or even better than manual transcription. Adding the --resume enables breakpoint COT inference to prevent wasted resources from repeated COT inferences.
-```shell
-python cot.py --root_dir datasets/clean/zh --provider google --model gemini-2.5-flash --api_key xxx --resume
-```
 - (Reference) Extract speech tokens based on the CosyVoice3 tokenizer for llm training.
 ```shell
 python speech_tokenizer.py --root datasets/clean/zh
 ```
-- (Reference) COT results are cleaned and corrected; video clip types (monologue, dialogue, multi-person, narration) are determined; training and test sets are split; and indexes are generated.
+- Multimodal CoT Correction. Based on general-purpose MLLMs, the system uses audio, ASR text, and RTTM files as input. It leverages Chain-of-Thought (CoT) reasoning to extract clues and corrects the results of the specialized models. It also annotates character age, gender, and vocal timbre. Experimental results show that this strategy reduces the CER from 4.53% to 0.94% and the speaker diarization error rate from 8.38% to 1.20%, achieving quality comparable to or even better than manual transcription. Adding the --resume enables breakpoint COT inference to prevent wasted resources from repeated COT inferences.
 ```shell
+python cot.py --root_dir datasets/clean/zh --provider google --model gemini-2.5-flash --api_key xxx --resume
 python build_datasets.py --root_dir datasets/clean/zh --out_dir datasets/clean --save
 ```
 

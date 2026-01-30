@@ -78,16 +78,13 @@ python run.py --root datasets/clean/zh --gpus 0 1 2 3
 cd speaker_diarization
 bash run.sh --stage 1 --stop_stage 4 --hf_access_token hf_xxx --root datasets/clean/zh --gpus "0 1 2 3"
 ```
-- 基于多模态大模型，输入音频，ASR 文本，RTTM 文件，通过思维链得到情感线索，并采样大模型矫正小模型方案降低 ASR 词错率，同时标注角色年龄性别和音色属性信息。实验验证大模型+小模型方案的 WER 从 3.2% 降低至 0.6%，speaker ID 的错误率从 4.3% 降低至 1.2%，与人工转录质量相当甚至更优。添加 --resume 实现断点 COT，以防止重复文件COT推理浪费资源。
-```shell
-python cot.py --root_dir datasets/clean/zh --provider google --model gemini-2.5-flash --api_key xxx --resume
-```
 - （参考）基于 CosyVoice3 tokenizer 提取 speech tokens 用于大模型训练。
 ```shell
 python speech_tokenizer.py --root datasets/clean/zh
 ```
-- （参考）结果清洗并纠正；视频片段类型（独白、对话、多人、旁白）判断；切分训练集和测试集；生成索引。
+- 多模态思维链校正。该系统基于通用多模态大模型，以音频、ASR 抄本和 RTTM 文件为输入，利用思维链推理来提取线索，并校正专用模型的结果，并标注人物年龄、性别和音色。实验结果表明，该策略将词错率从4.53% 降低到 0.94%，说话人识别错误率从 8.38% 降低到 1.20%，其质量可与人工转录相媲美，甚至更优。添加--resume选项可启用断点思维链推理，以避免重复思维链推理造成的资源浪费。
 ```shell
+python cot.py --root_dir datasets/clean/zh --provider google --model gemini-2.5-flash --api_key xxx --resume
 python build_datasets.py --root_dir datasets/clean/zh --out_dir datasets/clean --save
 ```
 
