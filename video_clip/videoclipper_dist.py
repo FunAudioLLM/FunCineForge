@@ -71,12 +71,20 @@ class VideoClipper:
 
     def video_recog(self, video_filename, sd_switch='no', hotwords="", output_dir=None):
         video = VideoFileClip(video_filename)
-        base_name, _ = os.path.splitext(os.path.basename(video_filename))
-        audio_file = os.path.join(output_dir or '.', base_name + '.wav')
+        # Extract the base name, add '_clip.mp4', and 'wav'
+        if output_dir is not None:
+            os.makedirs(output_dir, exist_ok=True)
+            _, base_name = os.path.split(video_filename)
+            base_name, _ = os.path.splitext(base_name)
+            audio_file = base_name + '.wav'
+            audio_file = os.path.join(output_dir, audio_file)
+        else:
+            base_name, _ = os.path.splitext(video_filename)
+            audio_file = base_name + '.wav'
 
         if video.audio is None:
             raise ValueError("No audio information found.")
-
+        
         video.audio.write_audiofile(audio_file, verbose=False, logger=None)
         wav, sr = librosa.load(audio_file, sr=16000)
         if os.path.exists(audio_file):
@@ -86,45 +94,64 @@ class VideoClipper:
         return self.recog((sr, wav), sd_switch, {'video_filename': video_filename}, hotwords, output_dir)
 
     def video_clip(self, state, output_dir=None):
+        """
+        Clip the video based on the given dest_text or provided timestamps in the state.
+        """
+        # Retrieve data from the state
         sentences = state['sentences']
         video_filename = state['video_filename']
+        
+        # timestamps
         ts = []
-        for s in sentences:
-            start_time = s['start'] / 1000.0
-            end_time = s['end'] / 1000.0
-            speaker_id = s.get('spk', 'unknown')
+        for sentence in sentences:
+            start_time = sentence['start'] / 1000.0  # Convert to seconds
+            end_time = sentence['end'] / 1000.0  # Convert to seconds
+            speaker_id = sentence.get('spk', 'unknown')  # Get speaker id from the sentence
             ts.append([start_time, end_time, speaker_id])
-
         srt_index = 1
         time_acc_ost = 0.0
-        clipped_folder = os.path.join(output_dir, 'clipped')
-        os.makedirs(clipped_folder, exist_ok=True)
 
-        for i, (start, end, speaker_id) in enumerate(ts):
-            srt_clip, subs, srt_index = generate_srt_clip(sentences, start, end, begin_index=srt_index - 1, time_acc_ost=time_acc_ost)
-            base_name = os.path.basename(video_filename)
-            video_name_without_ext, _ = os.path.splitext(base_name)
-            h, m, s = int(subs[0][0][0] // 3600), int((subs[0][0][0] % 3600) // 60), int(subs[0][0][0] % 60)
-            ms = int((subs[0][0][0] - int(subs[0][0][0])) * 100)
-            clip_filename = f"{video_name_without_ext}_{h:02}_{m:02}_{s:02}_{ms:02}_spk{speaker_id}"
-            clip_filepath = os.path.join(clipped_folder, clip_filename)
+        if len(ts):
+            time_acc_ost = 0.0
+            for i, (start, end, speaker_id) in enumerate(ts):
+                clipped_folder = os.path.join(output_dir, 'clipped')
+                os.makedirs(clipped_folder, exist_ok=True)
 
-            video_filepath = clip_filepath + '.mp4'
-            audio_filepath = clip_filepath + '.wav'
-            clip_srt_file = clip_filepath + '.srt'
+                # Create filename
+                srt_clip, subs, srt_index = generate_srt_clip(
+                    sentences, start, end, begin_index=srt_index-1, time_acc_ost=time_acc_ost
+                )
+                base_name = os.path.basename(video_filename)
+                video_name_without_ext, _ = os.path.splitext(base_name)
+                start_hours = int(subs[0][0][0] // 3600)
+                start_minutes = int((subs[0][0][0] % 3600) // 60)
+                start_seconds = int(subs[0][0][0] % 60)
+                start_milliseconds = int((subs[0][0][0] - int(subs[0][0][0])) * 100)  # Extract milliseconds
+                clip_filename = f"{video_name_without_ext}_{start_hours:02}_{start_minutes:02}_{start_seconds:02}_{start_milliseconds:02}_spk{speaker_id}"
+                clip_filepath = os.path.join(clipped_folder, clip_filename)
+        
+                # Clip the video and Write the video clip
+                video_filepath = clip_filepath + '.mp4'
+                audio_filepath = clip_filepath + '.wav'
+                clip_srt_file = clip_filepath + '.srt'
+                if not (os.path.exists(video_filepath) and os.path.exists(audio_filepath) and os.path.exists(clip_srt_file)):
+                    with VideoFileClip(video_filename) as video:
+                        sub = video.subclip(start, end)
+                        sub.write_videofile(video_filepath, audio_codec="aac", verbose=False, logger=None)
+                        sub.audio.write_audiofile(audio_filepath, codec='pcm_s16le', verbose=False, logger=None)
+                        sub.close()
+                        del sub
+                    # Write the SRT file
+                    with open(clip_srt_file, 'w') as fout:
+                        fout.write(srt_clip) 
 
-            if not (os.path.exists(video_filepath) and os.path.exists(audio_filepath) and os.path.exists(clip_srt_file)):
-                with VideoFileClip(video_filename) as video:
-                    sub = video.subclip(start, end)
-                    sub.write_videofile(video_filepath, audio_codec="aac", verbose=False, logger=None)
-                    sub.audio.write_audiofile(audio_filepath, codec='pcm_s16le', verbose=False, logger=None)
-                    sub.close()
-                    del sub
-                with open(clip_srt_file, 'w') as f:
-                    f.write(srt_clip)
-            time_acc_ost += (end - start)
+                time_acc_ost += (end - start)
+            
+            message = f"{len(ts)} periods found in the speech, clips created."
+        else:
+            message = "[WARNING] No valid periods found in the speech."
 
-        return f"{len(ts)} clips created."
+        return message
 
 
 def init_models(lang='zh', device='cpu'):

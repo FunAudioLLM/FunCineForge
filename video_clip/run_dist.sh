@@ -50,6 +50,7 @@ if [[ $stage -le 2 ]] && [[ $stop_stage -ge 2 ]]; then
         --output_dir "$output" \
         --lang "$lang" \
         --device "cpu" \
+        --skip_processed \
         --machine_rank "$machine_rank" \
         --total_machines "$total_machines"
 fi

@@ -22,17 +22,15 @@ class VideoClipper():
         if state is None:
             state = {}
         sr, data = audio_input
-
-        # Convert to float64 consistently (includes data type checking)
         data = convert_pcm_to_float(data)
 
-        # assert sr == 16000, "16kHz sample rate required, {} given.".format(sr)
-        if sr != 16000: # resample with librosa
+        if sr != 16000:
             data = librosa.resample(data, orig_sr=sr, target_sr=16000)
             sr = 16000
-        if len(data.shape) == 2:  # multi-channel wav input
+        if len(data.shape) == 2:
             data = data.mean(axis=1)
         state['audio_input'] = (sr, data)
+        
         if sd_switch == 'yes':
             rec_result = self.funasr_model.generate(
                 data, 

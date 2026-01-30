@@ -43,5 +43,6 @@ if [ ${stage} -le 2 ] && [ ${stop_stage} -ge 2 ]; then
                 --file $input \
                 --output_dir $output \
                 --lang $lang \
-                --device "cpu"
+                --device "cpu" \
+                --skip_processed
 fi
