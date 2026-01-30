@@ -14,7 +14,6 @@ from funasr import AutoModel
 
 class VideoClipper():
     def __init__(self, funasr_model):
-        print("Initializing VideoClipper.")
         self.funasr_model = funasr_model
         self.GLOBAL_COUNT = 0
         self.lang = 'zh'
@@ -202,12 +201,13 @@ def _init_worker(lang: str, device: str):
 
 def runner(stage, file, sd_switch, output_dir, lang):
     global _process_local
-    if _process_local is None:
-        raise RuntimeError("Model not initialized!")
+    funasr_model = None
+    
     if stage == 1:
+        if _process_local is None:
+            raise RuntimeError("Model not initialized!")
         funasr_model = _process_local['model']
-    else:
-        funasr_model = None
+
     audio_clipper = VideoClipper(funasr_model)
     audio_clipper.lang = lang
     
@@ -245,7 +245,7 @@ def runner(stage, file, sd_switch, output_dir, lang):
             print(f"✅ Stage 2 clip: {message}")
             
        
-def find_all_videos(folder, base_output_dir=None, skip_processed=True, suffixes=None):
+def find_all_videos(folder, base_output_dir=None, stage=1, skip_processed=True, suffixes=None):
     if suffixes is None:
         suffixes = ['.mp4','.avi','.mkv','.flv','.mov','.webm','.ts','.mpeg']
     all_videos = []
@@ -253,13 +253,17 @@ def find_all_videos(folder, base_output_dir=None, skip_processed=True, suffixes=
         for file in files:
             if any(file.lower().endswith(ext) for ext in suffixes):
                 file_path = os.path.join(root, file)
-                if skip_processed and base_output_dir is not None:
+                if skip_processed and base_output_dir:
                     parent_dir_name = os.path.basename(root)
                     video_name = os.path.splitext(file)[0]
                     output_subdir = os.path.join(base_output_dir, parent_dir_name, video_name)
                     total_srt = os.path.join(output_subdir, 'total.srt')
-                    if os.path.exists(total_srt):
-                        print(f"Skipping already processed: {file_path}")
+                    clipped_dir = os.path.join(output_subdir, 'clipped')
+                    if stage == 1 and os.path.exists(total_srt):
+                        print(f"Skipping already processed: {total_srt}")
+                        continue
+                    if stage == 2 and os.path.isdir(clipped_dir) and len(os.listdir(clipped_dir)) > 3:
+                        print(f"Skipping already processed: {clipped_dir}")
                         continue
                 all_videos.append(file_path)
     return all_videos
@@ -274,58 +278,27 @@ def process_single_video(file, stage, sd_switch, base_output_dir, lang):
         runner(stage, file, sd_switch, output_dir, lang)
     except Exception as e:
         print(f"❌ failed: {file}, error: {e}")
-    
+
+def _wait_futures(futures, timeout=3600):
+    for future in as_completed(futures, timeout=timeout):
+        try:
+            future.result(timeout=timeout)
+        except TimeoutError:
+            print("[ERROR] Task timed out after 1 hours.")
+        except Exception as e:
+            print(f"[ERROR] {e}")
 
 def get_parser():
-    parser = ArgumentParser(
-        description="ClipVideo Argument",
-        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
-    )
-    parser.add_argument(
-        "--stage",
-        type=int,
-        choices=(1, 2),
-        help="Stage, 0 for recognizing and 1 for clipping",
-        required=True
-    )
-    parser.add_argument(
-        "--file",
-        type=str,
-        default=None,
-        help="Input file or folder",
-        required=True
-    )
-    parser.add_argument(
-        "--sd_switch",
-        type=str,
-        choices=("no", "yes"),
-        default="no",
-        help="Turn on the speaker diarization or not",
-    )
-    parser.add_argument(
-        "--output_dir",
-        type=str,
-        default='./output',
-        help="Output files path",
-    )
-    parser.add_argument(
-        "--skip_processed",
-        action="store_true",
-        help="If set, skip processed for stage 1",
-    )
-    parser.add_argument(
-        "--lang",
-        type=str,
-        default='zh',
-        help="language"
-    )
-    parser.add_argument(
-        "--device", 
-        type=str, 
-        default='cpu', 
-        choices=['cpu', 'cuda', 'gpu'], 
-        help='Device to run models on: cpu or cuda')
+    parser = ArgumentParser(description="ClipVideo Argument", formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+    parser.add_argument("--stage", type=int, choices=(1, 2), required=True, help="Stage: 1=ASR & VAD, 2=Clip")
+    parser.add_argument("--file", type=str, required=True, help="Input file or folder")
+    parser.add_argument("--sd_switch", type=str, default="no", choices=["no", "yes"], help="Enable speaker diarization")
+    parser.add_argument("--output_dir", type=str, default="./output", help="Output directory")
+    parser.add_argument("--skip_processed", action="store_true", help="Skip already processed videos")
+    parser.add_argument("--lang", type=str, default="zh", help="Language: zh or en")
+    parser.add_argument("--device", type=str, default="cpu", choices=["cpu", "cuda", "gpu"], help="Device to use")
     return parser
+
 
 def main(cmd=None):
     parser = get_parser()
@@ -342,41 +315,50 @@ def main(cmd=None):
     
     if device == 'gpu':
         device = 'cuda'
-    if device == 'cuda':
-        if not torch.cuda.is_available():
-            raise RuntimeError("CUDA is not available, but device='cuda' was specified.")
-        num_gpus = torch.cuda.device_count()
-        max_workers = num_gpus
-        print(f"[INFO] Using {num_gpus} GPU(s)")
+        
+    if device == 'cuda' and torch.cuda.is_available():
+        max_workers = torch.cuda.device_count()
+        print(f"[INFO] Using {max_workers} GPU(s)")
     else:
-        # CPU 模式，可以使用更多 workers
         max_workers = max(1, mp.cpu_count())
         print(f"[INFO] Using CPU with {max_workers} worker(s)")
     
-    if os.path.isdir(file_or_folder):
-        all_videos = find_all_videos(file_or_folder, base_output_dir=output_dir, skip_processed=skip_processed)
-        print(f"Found {len(all_videos)} video files.")
-
-        with ProcessPoolExecutor(
-            max_workers = max_workers, 
-            initializer=_init_worker, 
-            initargs=(lang, device)
-        ) as executor:
-            futures = [executor.submit(process_single_video, file, stage, sd_switch, output_dir, lang)
-                       for file in all_videos]
-            for future in as_completed(futures, timeout=10800):
-                try:
-                    future.result(timeout=10800)
-                except TimeoutError:
-                    print("[ERROR] time out.")
-                except Exception as e:
-                    print(f"[ERROR] {e}")
-        print("✅ All videos processed.")
-    else:
-        # 单个文件处理
-        _init_worker(lang)
+    # 单文件直接处理
+    if not os.path.isdir(file_or_folder):
+        if stage == 1:
+            _init_worker(lang, device)
         runner(stage, file_or_folder, sd_switch, output_dir, lang)
         print(f"✅ Done single file: {file_or_folder}")
+        return
+        
+
+    all_videos = find_all_videos(file_or_folder, output_dir, stage, skip_processed)
+    print(f"Found {len(all_videos)} video files.")
+
+    # 多进程处理
+    if stage == 1:
+        with ProcessPoolExecutor(
+            max_workers = max_workers, 
+            initializer = _init_worker, 
+            initargs = (lang, device)
+        ) as executor:
+            futures = [
+                executor.submit(process_single_video, file, stage, sd_switch, output_dir, lang)
+                for file in all_videos
+            ]
+            _wait_futures(futures)
+    else:   # stage == 2
+        with ProcessPoolExecutor(
+            max_workers=max_workers
+        ) as executor:
+            futures = [
+                executor.submit(process_single_video, file, stage, sd_switch, output_dir, lang)
+                for file in all_videos
+            ]
+            _wait_futures(futures)
+            
+    print("✅ All videos processed.")
+
 
 
 if __name__ == '__main__':

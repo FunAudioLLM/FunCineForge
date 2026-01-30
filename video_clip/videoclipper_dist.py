@@ -13,7 +13,6 @@ from funasr import AutoModel
 
 class VideoClipper:
     def __init__(self, funasr_model):
-        print("Initializing VideoClipper.")
         self.funasr_model = funasr_model
         self.GLOBAL_COUNT = 0
         self.lang = 'zh'
@@ -180,10 +179,13 @@ def _init_worker(lang: str, device: str):
 
 def runner(stage, file, sd_switch, output_dir, lang):
     global _process_local
-    if _process_local is None:
-        raise RuntimeError("Model not initialized!")
+    funasr_model = None
+    
+    if stage == 1:
+        if _process_local is None:
+            raise RuntimeError("Model not initialized!")
+        funasr_model = _process_local['model']
 
-    funasr_model = _process_local['model']
     audio_clipper = VideoClipper(funasr_model)
     audio_clipper.lang = lang
 
@@ -222,21 +224,27 @@ def runner(stage, file, sd_switch, output_dir, lang):
         print(f"✅ Stage 2 clip: {message}")
 
 
-def find_all_videos(folder, base_output_dir=None, skip_processed=True, suffixes=None):
+def find_all_videos(folder, base_output_dir=None, stage=1, skip_processed=True, suffixes=None):
     if suffixes is None:
         suffixes = ['.mp4','.avi','.mkv','.flv','.mov','.webm','.ts','.mpeg']
     all_videos = []
     for root, _, files in os.walk(folder):
         for file in files:
             if any(file.lower().endswith(ext) for ext in suffixes):
-                path = os.path.join(root, file)
+                file_path = os.path.join(root, file)
                 if skip_processed and base_output_dir:
-                    parent = os.path.basename(root)
-                    name = os.path.splitext(file)[0]
-                    srt_path = os.path.join(base_output_dir, parent, name, 'total.srt')
-                    if os.path.exists(srt_path):
+                    parent_dir_name = os.path.basename(root)
+                    video_name = os.path.splitext(file)[0]
+                    output_subdir = os.path.join(base_output_dir, parent_dir_name, video_name)
+                    total_srt = os.path.join(output_subdir, 'total.srt')
+                    clipped_dir = os.path.join(output_subdir, 'clipped')
+                    if stage == 1 and os.path.exists(total_srt):
+                        print(f"Skipping already processed: {total_srt}")
                         continue
-                all_videos.append(path)
+                    if stage == 2 and os.path.isdir(clipped_dir) and len(os.listdir(clipped_dir)) > 3:
+                        print(f"Skipping already processed: {clipped_dir}")
+                        continue
+                all_videos.append(file_path)
     return all_videos
 
 
@@ -250,10 +258,18 @@ def process_single_video(file, stage, sd_switch, base_output_dir, lang):
     except Exception as e:
         print(f"❌ Failed: {file}, error: {e}")
 
+def _wait_futures(futures, timeout=3600):
+    for future in as_completed(futures, timeout=timeout):
+        try:
+            future.result(timeout=timeout)
+        except TimeoutError:
+            print("[ERROR] Task timed out after 1 hours.")
+        except Exception as e:
+            print(f"[ERROR] {e}")
 
 def get_parser():
-    parser = ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-    parser.add_argument("--stage", type=int, choices=(1, 2), required=True, help="Stage: 1=ASR, 2=Clip")
+    parser = ArgumentParser(description="ClipVideo Argument", formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+    parser.add_argument("--stage", type=int, choices=(1, 2), required=True, help="Stage: 1=ASR & VAD, 2=Clip")
     parser.add_argument("--file", type=str, required=True, help="Input file or folder")
     parser.add_argument("--sd_switch", type=str, default="no", choices=["no", "yes"], help="Enable speaker diarization")
     parser.add_argument("--output_dir", type=str, default="./output", help="Output directory")
@@ -293,13 +309,14 @@ def main(cmd=None):
 
     # 单文件直接处理
     if not os.path.isdir(file_or_folder):
-        _init_worker(lang, device)
+        if stage == 1:
+            _init_worker(lang, device)
         runner(stage, file_or_folder, sd_switch, output_dir, lang)
         print(f"✅ Done single file: {file_or_folder}")
         return
 
     # 获取所有任务并按机器分片
-    all_videos = find_all_videos(file_or_folder, output_dir, skip_processed)
+    all_videos = find_all_videos(file_or_folder, output_dir, stage, skip_processed)
     my_videos = [v for i, v in enumerate(all_videos) if i % total_machines == machine_rank]
     print(f"Machine {machine_rank+1}/{total_machines} assigned {len(my_videos)} out of {len(all_videos)} videos.")
 
@@ -308,22 +325,26 @@ def main(cmd=None):
         return
 
     # 多进程处理
-    with ProcessPoolExecutor(
-        max_workers=max_workers,
-        initializer=_init_worker,
-        initargs=(lang, device)
-    ) as executor:
-        futures = [
-            executor.submit(process_single_video, file, stage, sd_switch, output_dir, lang)
-            for file in my_videos
-        ]
-        for future in as_completed(futures, timeout=10800):
-            try:
-                future.result(timeout=10800)
-            except TimeoutError:
-                print("[ERROR] Task timed out after 3 hours.")
-            except Exception as e:
-                print(f"[ERROR] {e}")
+    if stage == 1:
+        with ProcessPoolExecutor(
+            max_workers = max_workers,
+            initializer = _init_worker,
+            initargs = (lang, device)
+        ) as executor:
+            futures = [
+                executor.submit(process_single_video, file, stage, sd_switch, output_dir, lang)
+                for file in my_videos
+            ]
+            _wait_futures(futures)
+    else:   # stage == 2
+        with ProcessPoolExecutor(
+            max_workers=max_workers
+        ) as executor:
+            futures = [
+                executor.submit(process_single_video, file, stage, sd_switch, output_dir, lang)
+                for file in my_videos
+            ]
+            _wait_futures(futures)
 
     print(f"✅ Machine {machine_rank+1}/{total_machines} completed.")
 
