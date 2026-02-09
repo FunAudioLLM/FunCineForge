@@ -56,39 +56,45 @@ we recommend that you refer to the following requirements to collect the corresp
 
 ### How to use
 
-- Standardize the video format to mp4, using libx264 & libmp3lame encoding; crop the opening and ending credits of television series (the default is to crop 5 minutes each).
+- [1] Standardize the video format to mp4; crop the beginning and end of long videos. (default is to trim 5 seconds from each part.)
 ```shell
 python normalize_mp4.py --root datasets/raw_zh
 python trim_video.py --root datasets/raw_zh
 ```
-- [Video Clip](./video_clip/README.md). For long-sequence video, VAD is used to obtain sentence-level segments, which are then transcribed using ASR to generate subtitle files. The long-sequence video is then cut into segments.
-```shell
-cd video_clip
-bash run.sh --stage 1 --stop_stage 2 --input datasets/raw_zh --output datasets/clean/zh --lang zh --device cpu
-```
-- Video duration limit and subtitle file cleaning. (Without --execute, only pre-deleted files will be printed. After checking, add --execute to confirm the deletion.)
-```shell
-python clean_video.py --root datasets/clean/zh --execute
-python clean_srt.py --root datasets/clean/zh --execute
-```
-- [Speech Separation](./speech_separation/README.md). The audio is used to separate the vocals from the instrumental music.
+
+- [2] [Speech Separation](./speech_separation/README.md). The audio is used to separate the vocals from the instrumental music.
 ```shell
 cd speech_separation
 python run.py --root datasets/clean/zh --gpus 0 1 2 3
 ```
-- [Speaker Diarization](./speaker_diarization/README.md). Multimodal active speaker recognition obtains RTTM files; identifies the speaker's facial frames, extracts frame-level speaker face and lip raw data, identifies speaking frames from facial frames, and extracts facial features of speaking frames.
+
+- [3] [VideoClipper](./video_clip/README.md). For long videos, VideoClipper is used to obtain sentence-level subtitle files and clip the long video into segments based on timestamps. Now it supports bilingualism in both Chinese and English. Below is an example in Chinese.
+```shell
+cd video_clip
+bash run.sh --stage 1 --stop_stage 2 --input datasets/raw_zh --output datasets/clean/zh --lang zh --device cpu
+```
+
+- Video duration limit and check for cleanup. (Without --execute, only pre-deleted files will be printed. After checking, add --execute to confirm the deletion.)
+```shell
+python clean_video.py --root datasets/clean/zh --execute
+python clean_srt.py --root datasets/clean/zh --execute
+```
+
+- [4] [Speaker Diarization](./speaker_diarization/README.md). Multimodal active speaker recognition obtains RTTM files; identifies the speaker's facial frames, extracts frame-level speaker face and lip raw data.
 ```shell
 cd speaker_diarization
 bash run.sh --stage 1 --stop_stage 4 --hf_access_token hf_xxx --root datasets/clean/zh --gpus "0 1 2 3"
 ```
+
+- [5] Multimodal CoT Correction. Based on general-purpose MLLMs, the system uses audio, ASR text, and RTTM files as input. It leverages Chain-of-Thought (CoT) reasoning to extract clues and corrects the results of the specialized models. It also annotates character age, gender, and vocal timbre. Experimental results show that this strategy reduces the CER from 4.53% to 0.94% and the speaker diarization error rate from 8.38% to 1.20%, achieving quality comparable to or even better than manual transcription. Adding the --resume enables breakpoint COT inference to prevent wasted resources from repeated COT inferences.
+```shell
+python cot.py --root_dir datasets/clean/zh --provider google --model gemini-3.0-pro --api_key xxx --resume
+python build_datasets.py --root_dir datasets/clean/zh --out_dir datasets/clean --save
+```
+
 - (Reference) Extract speech tokens based on the CosyVoice3 tokenizer for llm training.
 ```shell
 python speech_tokenizer.py --root datasets/clean/zh
-```
-- Multimodal CoT Correction. Based on general-purpose MLLMs, the system uses audio, ASR text, and RTTM files as input. It leverages Chain-of-Thought (CoT) reasoning to extract clues and corrects the results of the specialized models. It also annotates character age, gender, and vocal timbre. Experimental results show that this strategy reduces the CER from 4.53% to 0.94% and the speaker diarization error rate from 8.38% to 1.20%, achieving quality comparable to or even better than manual transcription. Adding the --resume enables breakpoint COT inference to prevent wasted resources from repeated COT inferences.
-```shell
-python cot.py --root_dir datasets/clean/zh --provider google --model gemini-2.5-flash --api_key xxx --resume
-python build_datasets.py --root_dir datasets/clean/zh --out_dir datasets/clean --save
 ```
 
 <a name="Dubbing-Model"></a>
@@ -101,7 +107,8 @@ Please stay tuned.
 ## Recent Updates 🚀
 - 2025/12/18: FunCineForge dataset pipeline toolkit is online! 🔥
 - 2026/01/19: Demo samples and dataset samples released. 🔥
-- 2026/01/25：Fix some environmental and operational issues.
+- 2026/01/25: Fix some environmental and operational issues.
+- 2026/02/09: Optimized the data pipeline and added support for English videos.
 
 <a name="Publication"></a>
 ## Publication 📚
