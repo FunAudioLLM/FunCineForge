@@ -76,7 +76,7 @@ bash run.sh --stage 1 --stop_stage 2 --input datasets/raw_zh --output datasets/c
 
 - Video duration limit and check for cleanup. (Without --execute, only pre-deleted files will be printed. After checking, add --execute to confirm the deletion.)
 ```shell
-python clean_video.py --root datasets/clean/zh --lang zh
+python clean_video.py --root datasets/clean/zh
 python clean_srt.py --root datasets/clean/zh --lang zh
 ```
 

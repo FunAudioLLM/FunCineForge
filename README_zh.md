@@ -73,7 +73,7 @@ bash run.sh --stage 1 --stop_stage 2 --input datasets/raw_zh --output datasets/c
 
 - 视频时长限制及清理检查。（若不使用--execute参数，则仅打印已预删除的文件。检查后，若需确认删除，请添加--execute参数。）
 ```shell
-python clean_video.py --root datasets/clean/zh --lang zh
+python clean_video.py --root datasets/clean/zh
 python clean_srt.py --root datasets/clean/zh --lang zh
 ```
 
