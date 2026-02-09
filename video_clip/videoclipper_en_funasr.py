@@ -5,7 +5,7 @@ import argparse
 from concurrent.futures import ProcessPoolExecutor, as_completed
 import multiprocessing as mp
 from moviepy.editor import VideoFileClip, AudioFileClip
-from utils.subtitle_utils import generate_srt, generate_srt_clip, process_asr_to_sentence_info
+from utils.subtitle_utils import generate_srt, generate_srt_clip
 from utils.argparse_tools import ArgumentParser
 from utils.trans_utils import write_state, load_state, convert_pcm_to_float
 from funasr import AutoModel
@@ -14,12 +14,12 @@ _MODEL_CACHE = {}
 _process_local = None
 
 class VideoClipper():
-    def __init__(self, model):
-        self.model = model
+    def __init__(self, funasr_model):
+        self.funasr_model = funasr_model
         self.GLOBAL_COUNT = 0
         self.lang = 'zh'
 
-    def recog(self, audio_input, audio_file, sd_switch='yes', state=None):
+    def recog(self, audio_input, sd_switch='yes', state=None):
         if state is None:
             state = {}
         sr, data = audio_input
@@ -32,50 +32,37 @@ class VideoClipper():
             data = data.mean(axis=1)
         state['audio_input'] = (sr, data)
         
-        if self.lang=='en':
-            rec_result = self.model.transcribe(
-                audio=audio_file,
-                language="English",
-                return_time_stamps=True,
+        if sd_switch == 'yes':
+            rec_result = self.funasr_model.generate(
+                data, 
+                return_spk_res=True,
+                sentence_timestamp=True, 
+                return_raw_text=True, 
+                is_final=True,
+                pred_timestamp=self.lang=='en',
+                en_post_proc=self.lang=='en',
+                cache={},
+                merge_vad=True,               # 开启 VAD 合并
+                merge_length_s=30             # 设置合并目标段最大长度（秒）
             )
-            sentence_info, recog_res_raw = process_asr_to_sentence_info(rec_result[0])
-            
-            
-            res_srt = generate_srt(sentence_info)
-            state['sentences'] = sentence_info
-            state['recog_res_raw'] = recog_res_raw
         else:
-            if sd_switch == 'yes':
-                rec_result = self.model.generate(
-                    data, 
-                    return_spk_res=True, 
-                    sentence_timestamp=True, 
-                    return_raw_text=True, 
-                    is_final=True, 
-                    pred_timestamp=False,
-                    en_post_proc=False,
-                    cache={},
-                    merge_vad=True,               # 开启 VAD 合并
-                    merge_length_s=30             # 设置合并目标段最大长度（秒）
-                )
-            else:
-                rec_result = self.model.generate(
-                    data, 
-                    return_spk_res=False, 
-                    sentence_timestamp=True, 
-                    return_raw_text=True, 
-                    is_final=True, 
-                    pred_timestamp=False,
-                    en_post_proc=False,
-                    cache={},
-                    merge_vad=True,               # 开启 VAD 合并
-                    merge_length_s=30             # 设置合并目标段最大长度（秒）
-                )
-            res_srt = generate_srt(rec_result[0]['sentence_info'])
+            rec_result = self.funasr_model.generate(
+                data, 
+                return_spk_res=False, 
+                sentence_timestamp=True, 
+                return_raw_text=True, 
+                is_final=True, 
+                pred_timestamp=self.lang=='en',
+                en_post_proc=self.lang=='en',
+                cache={},
+                merge_vad=True,               # 开启 VAD 合并
+                merge_length_s=30             # 设置合并目标段最大长度（秒）
+            )
+        res_srt = generate_srt(rec_result[0]['sentence_info'])
             
-            state['recog_res_raw'] = rec_result[0]['raw_text']
-            state['timestamp'] = rec_result[0]['timestamp']
-            state['sentences'] = rec_result[0]['sentence_info']
+        state['recog_res_raw'] = rec_result[0]['raw_text']
+        state['timestamp'] = rec_result[0]['timestamp']
+        state['sentences'] = rec_result[0]['sentence_info']
         # res_text = rec_result[0]['text']
         del data
         return res_srt, state
@@ -101,10 +88,9 @@ class VideoClipper():
             del video
             
         wav, sr = librosa.load(audio_file, sr=16000)
-        results = self.recog((sr, wav), audio_file, sd_switch, {'video_filename': video_filename})
         if os.path.exists(audio_file):
             os.remove(audio_file)
-        return results
+        return self.recog((sr, wav), sd_switch, {'video_filename': video_filename})
 
     def video_clip(self, state, output_dir=None):
         """
@@ -142,7 +128,7 @@ class VideoClipper():
                     sentences, start, end, begin_index=srt_index-1, time_acc_ost=time_acc_ost
                 )
                 if not subs:
-                    print(f"[WARNING] 空片段:跳过生成")
+                    print(f"[WARNING] 空片段跳过生成")
                     continue
                 base_name = os.path.basename(video_file)
                 video_name_without_ext, _ = os.path.splitext(base_name)
@@ -217,7 +203,7 @@ def init_models(lang='zh', device='cpu'):
     
     # 下载并缓存模型
     if lang == 'zh':
-        model = AutoModel(
+        funasr_model = AutoModel(
             model="iic/speech_seaco_paraformer_large_asr_nat-zh-cn-16k-common-vocab8404-pytorch",
             vad_model="damo/speech_fsmn_vad_zh-cn-16k-common-pytorch",
             punc_model="damo/punc_ct-transformer_zh-cn-common-vocab272727-pytorch",
@@ -225,35 +211,20 @@ def init_models(lang='zh', device='cpu'):
             device=device
         )
     elif lang == 'en':
-        try:
-            from qwen_asr import Qwen3ASRModel
-        except ImportError:
-            print("[ERROR] The qwen_asr package was not detected. If you want to run it on long English videos, please add the Qwen3-ASR environment.")
-            print("pip install -U qwen-asr[vllm]\n")
-            print("pip install -U flash-attn --no-build-isolation\n")
-            print("modelscope download --model Qwen/Qwen3-ASR-1.7B --local_dir ./Qwen3-ASR-1.7B \n")
-            print("modelscope download --model Qwen/Qwen3-ForcedAligner-0.6B --local_dir ./Qwen3-ForcedAligner-0.6B \n")
-            import sys
-            sys.exit(1)
-        asr_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "Qwen3-ASR-1.7B")
-        aligner_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "Qwen3-ForcedAligner-0.6B")
-        model = Qwen3ASRModel.LLM(
-            model=asr_path,
-            gpu_memory_utilization=0.7,
-            max_inference_batch_size=1,
-            max_new_tokens=16000,
-            forced_aligner=aligner_path,
-            forced_aligner_kwargs=dict(
-                dtype=torch.bfloat16,
-                device_map=device,
-                attn_implementation="flash_attention_2",
-            ), 
+        funasr_model = AutoModel(
+            # model="iic/speech_paraformer_asr-en-16k-vocab4199-pytorch",
+            model="iic/speech_paraformer_asr-en-16k-vocab4199-1B-pytorch",
+            vad_model="damo/speech_fsmn_vad_zh-cn-16k-common-pytorch",
+            vad_kwargs={"speech_to_sil_time_thres": 300, "max_end_silence_time": 1200, "speech_noise_thres": 0.7, "decibel_thres": -80.0},
+            punc_model="damo/punc_ct-transformer_cn-en-common-vocab471067-large",
+            spk_model="damo/speech_campplus_sv_zh-cn_16k-common",
+            device=device
         )
     else:
         raise ValueError(f"Unsupported language: {lang}")
     
-    _MODEL_CACHE[cache_key] = model
-    return model
+    _MODEL_CACHE[cache_key] = funasr_model
+    return funasr_model
 
 
 def _init_worker(lang: str, device: str):
@@ -286,13 +257,13 @@ def _init_worker(lang: str, device: str):
 
 def runner(stage, video_file, raw_audio_file, vocal_file, instrumental_file, sd_switch, output_dir, lang):
     global _process_local
-    model = None
+    funasr_model = None
     if stage == 1:
         if _process_local is None:
             raise RuntimeError("Model not initialized!")
-        model = _process_local['model']
+        funasr_model = _process_local['model']
 
-    audio_clipper = VideoClipper(model)
+    audio_clipper = VideoClipper(funasr_model)
     audio_clipper.lang = lang
     if vocal_file:
         mode = 'audio'
@@ -306,7 +277,7 @@ def runner(stage, video_file, raw_audio_file, vocal_file, instrumental_file, sd_
     if stage == 1:
         if mode == 'audio':
             wav, sr = librosa.load(vocal_file, sr=16000)
-            res_srt, state = audio_clipper.recog((sr, wav), vocal_file, sd_switch, {'audio_filename': vocal_file})
+            res_srt, state = audio_clipper.recog((sr, wav), sd_switch, {'audio_filename': vocal_file})
         elif mode == 'video':
             res_srt, state = audio_clipper.video_recog(video_file, sd_switch, output_dir)
         total_srt_file = output_dir + '/total.srt'
