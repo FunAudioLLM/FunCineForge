@@ -16,9 +16,9 @@ bash run.sh --stage 1 --stop_stage 2 --input datasets/raw_zh --output datasets/c
 
 English:
 ```
-bash run.sh --stage 1 --stop_stage 1 --input datasets/raw_en --output datasets/clean/en --lang en --device gpu
-bash run.sh --stage 2 --stop_stage 2 --input datasets/raw_en --output datasets/clean/en --lang en --device cpu
+bash run.sh --stage 1 --stop_stage 2 --input datasets/raw_en --output datasets/clean/en --lang en --device gpu
 ```
+
 We also provide a FunASR-based English model; if you'd like to try it, you can change the code executed in run.sh to videoclipper_en_funasr.py.
 
 If you want to test a single video sample, you can execute:
@@ -30,7 +30,7 @@ bash run.sh -stage 1 --stop_stage 2 --input datasets/raw_zh/红楼梦/01.mp4 --o
 
 English:
 ```
-bash run.sh -stage 1 --stop_stage 2 --input datasets/raw_zh/小谢尔顿第一季/01.mp4 --output datasets/clean/zh --lang zh --device cpu
+bash run.sh -stage 1 --stop_stage 2 --input datasets/raw_zh/小谢尔顿第一季/01.mp4 --output datasets/clean/zh --lang en --device gpu
 ```
 
 ## Illustrate

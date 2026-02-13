@@ -27,7 +27,7 @@ in Diverse Cinematic Scenes</b>
 
 <a name="Dataset&Demo"></a>
 ## Dataset & Demo 🎬
-You can access this [Website](https://anonymous.4open.science/w/FunCineForge/) to get our CineDub-CN dataset samples and demo samples. 
+You can access [https://funcineforge.github.io/](https://funcineforge.github.io/) to get our CineDub-CN dataset samples and demo samples. 
 
 
 <a name="Dataset-Pipeline"></a>
@@ -38,7 +38,7 @@ You can access this [Website](https://anonymous.4open.science/w/FunCineForge/) t
 FunCineForge dataset pipeline toolkit only relies on a Python environment to run.
 ```shell
 # Conda
-git clone git@github.com:FunAudioLLM/FunCineForge.git
+git clone git@github.com:FunAudioLLM/FunResearch.git
 conda create -n FunCineForge python=3.10 -y && conda activate FunCineForge
 sudo apt-get install ffmpeg
 # Initial settings
@@ -56,10 +56,9 @@ we recommend that you refer to the following requirements to collect the corresp
 
 ### How to use
 
-- [1] Standardize the video format to mp4; crop the beginning and end of long videos. (default is to trim 5 seconds from each part.)
+- [1] Standardize video format and name; trim the beginning and end of long videos; extract the audio from the trimmed video. (default is to trim 10 seconds from both the beginning and end.)
 ```shell
-python normalize_mp4.py --root datasets/raw_zh
-python trim_video.py --root datasets/raw_zh
+python normalize_trim.py --root datasets/raw_zh --intro 10 --outro 10
 ```
 
 - [2] [Speech Separation](./speech_separation/README.md). The audio is used to separate the vocals from the instrumental music.
@@ -68,7 +67,7 @@ cd speech_separation
 python run.py --root datasets/clean/zh --gpus 0 1 2 3
 ```
 
-- [3] [VideoClipper](./video_clip/README.md). For long videos, VideoClipper is used to obtain sentence-level subtitle files and clip the long video into segments based on timestamps. Now it supports bilingualism in both Chinese and English. Below is an example in Chinese.
+- [3] [VideoClipper](./video_clip/README.md). For long videos, VideoClipper is used to obtain sentence-level subtitle files and clip the long video into segments based on timestamps. Now it supports bilingualism in both Chinese and English. Below is an example in Chinese. It is recommended to use gpu acceleration for English.
 ```shell
 cd video_clip
 bash run.sh --stage 1 --stop_stage 2 --input datasets/raw_zh --output datasets/clean/zh --lang zh --device cpu
@@ -123,8 +122,6 @@ If you use our dataset or code, please cite the following paper:
     primaryClass={cs.CV},
 }
 </pre>
-
-
 
 <a name="Comminicate"></a>
 ## Comminicate 🍟

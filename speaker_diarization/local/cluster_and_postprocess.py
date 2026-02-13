@@ -55,7 +55,7 @@ def make_rttms(seg_list, out_rttm, rec_id):
 def audio_only_func(wav_file, rec_id, audio_embs_file, rttm_dir, config):
     cluster = build('cluster', config)
     if not os.path.exists(audio_embs_file):
-        print("[Visual Embs] does not exist, it is possible that vad model did not detect valid speech in file %s, please check it."%(wav_file))
+        print("[Audio Embs] does not exist, it is possible that vad model did not detect valid speech in file %s, please check it."%(wav_file))
         return
     with open(audio_embs_file, 'rb') as f:
         stat_obj = pickle.load(f)
@@ -76,10 +76,7 @@ def audio_only_func(wav_file, rec_id, audio_embs_file, rttm_dir, config):
 def audio_vision_func(wav_file, rec_id, audio_embs_file, visual_embs_file, rttm_dir, config):
     cluster = build('cluster', config)
     if not os.path.exists(audio_embs_file):
-        print("[ERROR] Audio Embs does not exist, it's possible vad model did not detect valid speech in file %s, please check it."%(wav_file))
-        return
-    if not os.path.exists(visual_embs_file):
-        print("[ERROR] Visual Embs does not exist in file %s, please check it."%(wav_file))
+        print("[Audio Embs] does not exist, it is possible that vad model did not detect valid speech in file %s, please check it."%(wav_file))
         return
     with open(audio_embs_file, 'rb') as f:
         stat_obj = pickle.load(f)
@@ -164,7 +161,7 @@ def main():
         if os.path.exists(visual_embs_file):
             audio_vision_func(wpath, rec_id, audio_embs_file, visual_embs_file, rttm_dir, config)
         else:
-            print("[Visual Embs] does not exist in file %s, please check it."%(wpath))
+            print("[Visual Embs] does not exist in file %s, now only use audio cluster."%(wpath))
             audio_only_func(wpath, rec_id, audio_embs_file, rttm_dir, config)
   
 

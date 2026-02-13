@@ -26,7 +26,7 @@
 
 <a name="数据集&样例"></a>
 ## 数据集 & 样例 🎬
-您可以访问此 [网站](https://anonymous.4open.science/w/FunCineForge/) 获取我们的 CineDub-CN 数据集样本和演示样本。
+您可以访问此 [https://funcineforge.github.io/](https://funcineforge.github.io/) 获取我们的 CineDub-CN 数据集样本和演示样本。
 
 <a name="数据集管道"></a>
 ## 数据集管道 🔨
@@ -36,7 +36,7 @@
 FunCineForge 数据集管道工具包的运行仅依赖于一个 Python 环境。
 ```shell
 # Conda
-git clone git@github.com:FunAudioLLM/FunCineForge.git
+git clone git@github.com:FunAudioLLM/FunResearch.git
 conda create -n FunCineForge python=3.10 -y && conda activate FunCineForge
 sudo apt-get install ffmpeg
 # 初始化设置
@@ -53,10 +53,9 @@ python setup.py
 
 ### 使用方法
 
-- [1] 将视频格式标准化为mp4；裁剪长视频的开头和结尾。（默认是从每部分裁剪5秒。）
+- [1] 将视频格式、名称标准化；裁剪长视频的片头片尾；提取裁剪后视频的音频。（默认是从起止各裁剪 10 秒。）
 ```shell
-python normalize_mp4.py --root datasets/raw_zh
-python trim_video.py --root datasets/raw_zh
+python normalize_trim.py --root datasets/raw_zh --intro 10 --outro 10
 ```
 
 - [2] [Speech Separation](./speech_separation/README.md). 音频进行人声乐声分离。
@@ -65,7 +64,7 @@ cd speech_separation
 python run.py --root datasets/clean/zh --gpus 0 1 2 3
 ```
 
-- [3] [VideoClipper](./video_clip/README.md). 对于长视频，使用 VideoClipper 获取句子级别的字幕文件，并根据时间戳将长视频剪辑成片段。现在它支持中英双语。以下是中文示例.
+- [3] [VideoClipper](./video_clip/README.md). 对于长视频，使用 VideoClipper 获取句子级别的字幕文件，并根据时间戳将长视频剪辑成片段。现在它支持中英双语。以下是中文示例。英文建议采用 gpu 加速处理。
 ```shell
 cd video_clip
 bash run.sh --stage 1 --stop_stage 2 --input datasets/raw_zh --output datasets/clean/zh --lang zh --device cpu
@@ -103,7 +102,7 @@ python speech_tokenizer.py --root datasets/clean/zh
 - 2025/12/18：FunCineForge 数据集管道工具包上线！🔥
 - 2026/01/19：发布演示样例和数据集样例。 🔥
 - 2026/01/25：修复了一些环境和运行问题。
-- - 2026/02/09：优化了数据管道，新增支持英文视频的能力。
+- 2026/02/09：优化了数据管道，新增支持英文视频的能力。
 
 <a name="发表"></a>
 ## 发表 📚

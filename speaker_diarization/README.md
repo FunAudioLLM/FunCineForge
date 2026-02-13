@@ -38,8 +38,6 @@ The [pyannote/segmentation-3.0](https://huggingface.co/pyannote/segmentation-3.0
 - Stage 4: Joint cluster the audio and visual embeddings to obtain the multimodal active speaker detection results and save them in RTTM file.
 
 
-
-
 hf_access_token is your access token
 ``` sh
 bash run.sh --stage 1 --stop_stage 4 --hf_access_token hf_xxx --root datasets/clean/zh --gpus "0 1 2 3"
