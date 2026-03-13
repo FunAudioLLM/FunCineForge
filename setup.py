@@ -23,6 +23,10 @@ FILE_MAPPINGS = [
     {
         "source": ["MelBandRoformer.ckpt"],
         "dest_dir": "speech_separation/models/melbandroformer",
+    },
+    {
+        "source": ["funcineforge_zh_en"],
+        "dest_dir": "exps",
     }
 ]
 
@@ -90,8 +94,8 @@ def check_git_available():
         return False
 
 def download_huggingface_models():
-    """从HuggingFace下载模型"""
-    print_step(3, "下载模型文件")
+    """从 HuggingFace 下载模型"""
+    print_step(3, "从 HuggingFace 下载模型文件")
     
     if not check_git_available():
         return False
@@ -110,6 +114,34 @@ def download_huggingface_models():
             force_download=False,
             ignore_patterns=["*.md", ".git*"],
             token=None,
+            repo_type="model",
+        )   
+        print("模型下载完成")
+        return True
+        
+    except Exception as e:
+        print(f"下载发生错误: {e}")
+        return False
+    
+def download_modelscope_models():
+    """从 ModelScope 下载模型"""
+    print_step(3, "从 ModelScope 下载模型文件")
+    
+    if not check_git_available():
+        return False
+    
+    temp_path = Path(TEMP_DIR)
+    if temp_path.exists():
+        shutil.rmtree(temp_path)
+    temp_path.mkdir(exist_ok=True)
+    
+    try:
+        from modelscope import snapshot_download
+        snapshot_download(
+            repo_id="Jiaxuanliu/FunCineForge",
+            revision='v1.0.0',
+            local_dir=str(temp_path),
+            ignore_patterns=["*.md", ".git*"],
             repo_type="model",
         )   
         print("模型下载完成")
@@ -175,8 +207,10 @@ def main():
         if response != 'y':
             sys.exit(1)
     
-    if not download_huggingface_models():
-        sys.exit(1)
+    if not download_modelscope_models():
+        print("尝试更换仓库下载模型...")
+        if not download_huggingface_models():
+            sys.exit(1)
     
     if not organize_model_files():
         sys.exit(1)

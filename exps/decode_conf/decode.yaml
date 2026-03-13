@@ -1,0 +1,42 @@
+model: FunCineForgeInferModel
+index_ds: FunCineForgeDS
+xvec_model: /nfs/yanzhang.ljx/workspace/FunCineForge/exps/funcineforge_zh_en/camplus.onnx
+model_conf: {}
+
+dataset_conf:
+# face is from the video, vocal is the reference audio, extract speaker ID and start-end timestamp from dialogue
+    load_meta_data_key: "text,clue,face,dialogue,vocal,video"
+    sos: 6561
+    eos: 6562
+    turn_of_speech: 6563
+    fill_token: 6564
+    ignore_id: -100
+    startofclue_token: 151646
+    endofclue_token: 151647
+    frame_shift: 25  # ms
+    timebook_size: 1500 # 60 * 25 = 1500
+    pangbai: 1500
+    dubai: 1501
+    duihua: 1502
+    duoren: 1503
+    male: 1504
+    female: 1505
+    child: 1506
+    youth: 1507
+    adult: 1508
+    middle: 1509
+    elderly: 1510
+    speaker_id_start: 1511
+
+
+sampling: ras
+lm_use_prompt: true
+fm_use_prompt: true
+use_llm_cache: true
+seed: 0
+max_length: 1500  # 60s * 25 fps
+min_length: 50   # 2s * 25 fps
+llm_dtype: fp32
+fm_dtype: fp32
+voc_dtype: fp32
+batch_size: 1

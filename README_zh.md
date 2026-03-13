@@ -1,7 +1,7 @@
 ### <p align="center">「[English](./README.md) | 简体中文」</p>
 
 <p align="center">
-<b>🎬 FunCineForge：一种用于多样化影视场景零样本配音的统一数据集管道与模型</b>
+<b>🎬 Fun-CineForge：一种用于多样化影视场景零样本配音的统一数据集管道与模型</b>
 </p>
 
 <div align="center">
@@ -22,18 +22,18 @@
 </h4>
 </div>
 
-**FunCineForge** 包含一个生产大规模配音数据集的端到端数据集管道，和一个基于多模态大模型的配音模型，该模型专为多样的电影场景而设计。利用该管道，我们构建了首个大规模中文电视剧配音数据集 CineDub-CN，该数据集包含丰富的标注和多样化的场景。在独白、旁白、对话和多说话人场景中，我们的配音模型在音频质量、唇形同步、音色转换和指令遵循等方面全部优于最先进的方法。
+**Fun-CineForge** 包含一个生产大规模配音数据集的端到端数据集管道，和一个基于多模态大模型的配音模型，该模型专为多样的电影场景而设计。利用该管道，我们构建了首个大规模中文电视剧配音数据集 CineDub-CN，该数据集包含丰富的标注和多样化的场景。在独白、旁白、对话和多说话人场景中，我们的配音模型在音频质量、唇形同步、音色转换和指令遵循等方面全部优于最先进的方法。
 
 <a name="数据集&样例"></a>
 ## 数据集 & 样例 🎬
-您可以访问此 [https://funcineforge.github.io/](https://funcineforge.github.io/) 获取我们的 CineDub-CN 数据集样本和演示样本。
+您可以访问此 [https://funcineforge.github.io/](https://funcineforge.github.io/) 获取我们的 CineDub-CN 数据集和 CineDub-EN 数据集样例和演示样例。
 
 <a name="数据集管道"></a>
 ## 数据集管道 🔨
 
 ### 环境安装
 
-FunCineForge 数据集管道工具包的运行仅依赖于一个 Python 环境。
+Fun-CineForge 数据集管道工具包的运行仅依赖于一个 Python 环境。
 ```shell
 # Conda
 git clone git@github.com:FunAudioLLM/FunResearch.git
@@ -96,14 +96,21 @@ python speech_tokenizer.py --root datasets/clean/zh
 
 <a name="Dubbing-Model"></a>
 ## 配音模型 ⚙️
-敬请期待。
+目前开源了推理代码以供体验，API 调用接口和多人场景开发中... 我们提供了一些测试样例和一个参考音频在 data 文件夹中。
+您需要修改 **infer.sh** 脚本中的 **test_data_jsonl** 和 **output_dir** 参数。
+```shell
+cd exps
+bash infer.sh
+```
 
 <a name="近期更新"></a>
 ## 近期更新 🚀
-- 2025/12/18：FunCineForge 数据集管道工具包上线！🔥
-- 2026/01/19：发布演示样例和数据集样例。 🔥
+- 2025/12/18：Fun-CineForge 数据集管道工具包上线！🔥
+- 2026/01/19：发布中文演示样例和 CineDub-CN 数据集样例。 🔥
 - 2026/01/25：修复了一些环境和运行问题。
 - 2026/02/09：优化了数据管道，新增支持英文视频的能力。
+- 2026/03/05：发布英文演示样例和 CineDub-EN 数据集样例。 🔥
+- 2026/03/13：开源推理代码和 checkpoints。 🔥
 
 <a name="发表"></a>
 ## 发表 📚
@@ -122,17 +129,17 @@ python speech_tokenizer.py --root datasets/clean/zh
 
 <a name="社区交流"></a>
 ## 社区交流 🍟
-FunCineForge 开源项目由通义实验室语音团队和语音及语言信息处理国家工程研究中心学生开发并维护，我们欢迎您在 FunCineForge GitHub Issues 参与问题讨论，或联系我们合作开发。
+Fun-CineForge 开源项目由通义实验室语音团队和语音及语言信息处理国家工程研究中心学生开发并维护，我们欢迎您在 Fun-CineForge GitHub Issues 参与问题讨论，或联系我们合作开发。
 有任何问题您可以联系[开发者](mailto:jxliu@mail.ustc.edu.cn)。
 
-⭐ 希望您你支持 FunCineForge，谢谢。
+⭐ 希望您你支持 Fun-CineForge，谢谢。
 
 ### 免责声明
 
 本仓库包含研究成果：
 
-⚠️ 非阿里巴巴官方产品
+⚠️ 非阿里巴巴商业化产品
 
 ⚠️ 仅供学术/研究用途
 
-⚠️ FunCineForge 受特定许可条款约束
+⚠️ Fun-CineForge 受特定许可条款约束

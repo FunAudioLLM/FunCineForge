@@ -1,7 +1,7 @@
 ### <p align="center">「English | [简体中文](./README_zh.md)」</p>
 
 <p align="center">
-<b>🎬 FunCineForge: A Unified Dataset Pipeline and Model for Zero-Shot Movie Dubbing<br>
+<b>🎬 Fun-CineForge: A Unified Dataset Pipeline and Model for Zero-Shot Movie Dubbing<br>
 in Diverse Cinematic Scenes</b>
 </p>
 
@@ -23,7 +23,7 @@ in Diverse Cinematic Scenes</b>
 </h4>
 </div>
 
-**FunCineForge** contains an end-to-end dataset pipeline for producing large-scale dubbing datasets and an MLLM-based dubbing model designed for diverse cinematic scenes. Using this pipeline, we constructed the first large-scale Chinese television dubbing dataset CineDub-CN, which includes rich annotations and diverse scenes. In monologue, narration, dialogue, and multi-speaker scenes, our dubbing model consistently outperforms state-of-the-art methods in terms of audio quality, lip-sync, timbre transition, and instruction following.
+**Fun-CineForge** contains an end-to-end dataset pipeline for producing large-scale dubbing datasets and an MLLM-based dubbing model designed for diverse cinematic scenes. Using this pipeline, we constructed the first large-scale Chinese television dubbing dataset CineDub-CN, which includes rich annotations and diverse scenes. In monologue, narration, dialogue, and multi-speaker scenes, our dubbing model consistently outperforms state-of-the-art methods in terms of audio quality, lip-sync, timbre transition, and instruction following.
 
 <a name="Dataset&Demo"></a>
 ## Dataset & Demo 🎬
@@ -35,7 +35,7 @@ You can access [https://funcineforge.github.io/](https://funcineforge.github.io/
 
 ### Environmental Installation
 
-FunCineForge dataset pipeline toolkit only relies on a Python environment to run.
+Fun-CineForge dataset pipeline toolkit only relies on a Python environment to run.
 ```shell
 # Conda
 git clone git@github.com:FunAudioLLM/FunResearch.git
@@ -99,16 +99,23 @@ python speech_tokenizer.py --root datasets/clean/zh
 
 <a name="Dubbing-Model"></a>
 ## Dubbing Model ⚙️
-Please stay tuned.
-
+At present, inference code is open sourced for user experience, and API calling interfaces and multi-speaker scenarios are under development.
+We have provided some test samples and a reference audio in the data folder.
+You need to modify the **test_data_jsonl** and **output_dir** parameters in the **infer.sh** script.
+```shell
+cd exps
+bash infer.sh
+```
 
 
 <a name="Recent-Updates"></a>
 ## Recent Updates 🚀
-- 2025/12/18: FunCineForge dataset pipeline toolkit is online! 🔥
-- 2026/01/19: Demo samples and dataset samples released. 🔥
+- 2025/12/18: Fun-CineForge dataset pipeline toolkit is online! 🔥
+- 2026/01/19: Chinese demo samples and CineDub-CN dataset samples released. 🔥
 - 2026/01/25: Fix some environmental and operational issues.
 - 2026/02/09: Optimized the data pipeline and added support for English videos.
+- 2026/03/05: English demo samples and CineDub-EN dataset samples released. 🔥
+- 2026/03/13: Open source inference code and checkpoints. 🔥
 
 <a name="Publication"></a>
 ## Publication 📚
@@ -126,18 +133,18 @@ If you use our dataset or code, please cite the following paper:
 
 <a name="Comminicate"></a>
 ## Comminicate 🍟
-The FunCineForge open-source project is developed and maintained by the Tongyi Lab Speech Team and student from the National Engineering Research Center of Speech and Language Information Processing.
-We welcome you to participate in discussions on FunCineForge GitHub Issues or contact us for collaborative development.
+The Fun-CineForge open-source project is developed and maintained by the Tongyi Lab Speech Team and student from the National Engineering Research Center of Speech and Language Information Processing.
+We welcome you to participate in discussions on Fun-CineForge GitHub Issues or contact us for collaborative development.
 For any questions, you can contact the [developer](mailto:jxliu@mail.ustc.edu.cn).
 
-⭐ Hope you will support FunCineForge. Thank you.
+⭐ Hope you will support Fun-CineForge. Thank you.
 
 ### Disclaimer
 
 This repository contains research artifacts:
 
-⚠️ Not an official Alibaba product
+⚠️ Not a commercial product of Alibaba
 
 ⚠️ Released for academic/research purposes only
 
-⚠️ FunCineForge is subject to specific license terms
+⚠️ Fun-CineForge is subject to specific license terms
