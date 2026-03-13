@@ -50,7 +50,7 @@ Requests==2.32.5
 rotary_embedding_torch==0.8.9
 scikit-learn==1.7.1
 scipy==1.15.3
-setuptools==75.1.0
+setuptools==82.0.1
 simplejson
 soundfile==0.13.1
 starlette==0.47.2
