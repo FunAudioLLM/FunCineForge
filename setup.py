@@ -108,7 +108,7 @@ def download_huggingface_models():
     try:
         from huggingface_hub import snapshot_download
         snapshot_download(
-            repo_id="xuan3986/FunCineForge",
+            repo_id="FunAudioLLM/Fun-CineForge",
             local_dir=str(temp_path),
             resume_download=True,
             force_download=False,
@@ -138,7 +138,7 @@ def download_modelscope_models():
     try:
         from modelscope import snapshot_download
         snapshot_download(
-            repo_id="Jiaxuanliu/FunCineForge",
+            repo_id="FunAudioLLM/Fun-CineForge",
             revision='v1.0.0',
             local_dir=str(temp_path),
             ignore_patterns=["*.md", ".git*"],
