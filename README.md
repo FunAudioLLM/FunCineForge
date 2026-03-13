@@ -115,7 +115,7 @@ bash infer.sh
 - 2026/01/25: Fix some environmental and operational issues.
 - 2026/02/09: Optimized the data pipeline and added support for English videos.
 - 2026/03/05: English demo samples and CineDub-EN dataset samples released. 🔥
-- 2026/03/13: Open source inference code and checkpoints. 🔥
+- 2026/03/16: Open source inference code and checkpoints. 🔥
 
 <a name="Publication"></a>
 ## Publication 📚

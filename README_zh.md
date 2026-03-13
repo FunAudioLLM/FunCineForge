@@ -1,7 +1,7 @@
 ### <p align="center">「[English](./README.md) | 简体中文」</p>
 
 <p align="center">
-<b>🎬 Fun-CineForge：一种用于多样化影视场景零样本配音的统一数据集管道与模型</b>
+<b>🎬 Fun-CineForge：一种用于多样化影视场景零样本配音的统一数据集管道和模型</b>
 </p>
 
 <div align="center">
@@ -110,7 +110,7 @@ bash infer.sh
 - 2026/01/25：修复了一些环境和运行问题。
 - 2026/02/09：优化了数据管道，新增支持英文视频的能力。
 - 2026/03/05：发布英文演示样例和 CineDub-EN 数据集样例。 🔥
-- 2026/03/13：开源推理代码和 checkpoints。 🔥
+- 2026/03/16：开源推理代码和 checkpoints。 🔥
 
 <a name="发表"></a>
 ## 发表 📚
