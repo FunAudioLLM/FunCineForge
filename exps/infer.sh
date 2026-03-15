@@ -6,10 +6,10 @@ infer_config="decode.yaml"
 lm_ckpt_path="funcineforge_zh_en/llm/ds-model.pt.best/mp_rank_00_model_states.pt"
 fm_ckpt_path="funcineforge_zh_en/flow/ds-model.pt.best/mp_rank_00_model_states.pt"
 voc_ckpt_path="funcineforge_zh_en/vocoder/ds-model.pt.best/avg_5_removewn.pt"
-# data
-# test_data_jsonl="/nfs/yanzhang.ljx/workspace/datasets/YingShi/clean/test_zh.jsonl"
-test_data_jsonl="/nfs/yanzhang.ljx/workspace/datasets/YingShi/clean/test_en.jsonl"
-output_dir="/nfs/yanzhang.ljx/workspace/FunCineForge/exps/results"
+
+# input & output
+test_data_jsonl="data/demo.jsonl"
+output_dir="results"
 
 master_port="62202"
 ext_opt=""
