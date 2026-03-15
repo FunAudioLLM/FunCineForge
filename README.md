@@ -99,14 +99,14 @@ python speech_tokenizer.py --root datasets/clean/zh
 
 <a name="Dubbing-Model"></a>
 ## Dubbing Model ⚙️
-At present, inference code is open sourced for user experience, and API calling interfaces and multi-speaker scenarios are under development.
-We have provided some test samples and a reference audio in the data folder.
-You need to modify the **test_data_jsonl** and **output_dir** parameters in the **infer.sh** script.
+We've open-sourced the inference code and the **infer.sh** script, and provided some test cases in the data folder for your experience. Inference requires a consumer-grade GPU. Run the following command:
+
 ```shell
 cd exps
 bash infer.sh
 ```
 
+The API for multi-speaker dubbing from raw videos and SRT scripts is under development ...
 
 <a name="Recent-Updates"></a>
 ## Recent Updates 🚀
@@ -133,7 +133,7 @@ If you use our dataset or code, please cite the following paper:
 
 <a name="Comminicate"></a>
 ## Comminicate 🍟
-The Fun-CineForge open-source project is developed and maintained by the Tongyi Lab Speech Team and a student from NERCSLIP Lab, University of Science and Technology of China.
+The Fun-CineForge open-source project is developed and maintained by the Tongyi Lab Speech Team and a student from NERCSLIP, University of Science and Technology of China.
 We welcome you to participate in discussions on Fun-CineForge GitHub Issues or contact us for collaborative development.
 For any questions, you can contact the [developer](mailto:jxliu@mail.ustc.edu.cn).
 
@@ -143,8 +143,8 @@ For any questions, you can contact the [developer](mailto:jxliu@mail.ustc.edu.cn
 
 This repository contains research artifacts:
 
-⚠️ Not a commercial product of Alibaba
+⚠️ Currently not a commercial product of Tongyi Lab.
 
-⚠️ Released for academic/research purposes only
+⚠️ Released for academic research / cutting-edge exploration purposes
 
-⚠️ Fun-CineForge is subject to specific license terms
+⚠️ CineDub Dataset samples are subject to specific license terms.

@@ -96,12 +96,14 @@ python speech_tokenizer.py --root datasets/clean/zh
 
 <a name="Dubbing-Model"></a>
 ## 配音模型 ⚙️
-目前开源了推理代码以供体验，API 调用接口和多人场景开发中... 我们提供了一些测试样例和一个参考音频在 data 文件夹中。
-您需要修改 **infer.sh** 脚本中的 **test_data_jsonl** 和 **output_dir** 参数。
+我们开源了推理代码和 **infer.sh** 脚本，在 data 文件夹中提供了一些测试样例，以供体验。推理需要一张消费级 GPU。按下面的命令运行：
+
 ```shell
 cd exps
 bash infer.sh
 ```
+
+从原始视频和 SRT 脚本进行多人配音的 API 调用接口在开发中 ... 
 
 <a name="近期更新"></a>
 ## 近期更新 🚀
@@ -129,17 +131,17 @@ bash infer.sh
 
 <a name="社区交流"></a>
 ## 社区交流 🍟
-Fun-CineForge 开源项目由通义实验室语音团队和中国科学技术大学 NERCSLIP 实验室学生开发并维护，我们欢迎您在 Fun-CineForge GitHub Issues 参与问题讨论，或联系我们合作开发。
+Fun-CineForge 开源项目由通义实验室语音团队和中国科学技术大学 NERCSLIP 学生开发并维护，我们欢迎您在 Fun-CineForge GitHub Issues 参与问题讨论，或联系我们合作开发。
 有任何问题您可以联系[开发者](mailto:jxliu@mail.ustc.edu.cn)。
 
 ⭐ 希望您你支持 Fun-CineForge，谢谢。
 
 ### 免责声明
 
-本仓库包含研究成果：
+该仓库包含的研究成果：
 
-⚠️ 非阿里巴巴商业化产品
+⚠️ 目前非通义实验室商业化产品
 
-⚠️ 仅供学术/研究用途
+⚠️ 供学术研究/前沿探索用途
 
-⚠️ Fun-CineForge 受特定许可条款约束
+⚠️ 数据集样例受特定许可条款约束
