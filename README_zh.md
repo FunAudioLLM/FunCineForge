@@ -36,11 +36,10 @@
 Fun-CineForge 数据集管道工具包的运行仅依赖于一个 Python 环境。
 ```shell
 # Conda
-git clone git@github.com:FunAudioLLM/FunResearch.git
+git clone git@github.com:FunAudioLLM/FunCineForge.git
 conda create -n FunCineForge python=3.10 -y && conda activate FunCineForge
 sudo apt-get install ffmpeg
 # 初始化设置
-cd FunCineForge
 python setup.py
 ```
 
