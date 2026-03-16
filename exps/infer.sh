@@ -39,7 +39,7 @@ torchrun $DISTRIBUTED_ARGS \
 infer.py \
 --config-path "${workspace}/decode_conf" \
 --config-name "${infer_config}" \
-++node_rank="${RANK}" \
+++node_rank="${RANK:-0}" \
 ++world_size="${WORLD_SIZE}" \
 ++num_gpus="${gpu_num}" \
 ++disable_pbar=true \

@@ -1,6 +1,6 @@
 model: FunCineForgeInferModel
 index_ds: FunCineForgeDS
-xvec_model: /nfs/yanzhang.ljx/workspace/FunCineForge/exps/funcineforge_zh_en/camplus.onnx
+xvec_model: funcineforge_zh_en/camplus.onnx
 model_conf: {}
 
 dataset_conf:
