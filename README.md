@@ -86,16 +86,20 @@ cd speaker_diarization
 bash run.sh --stage 1 --stop_stage 4 --hf_access_token hf_xxx --root datasets/clean/zh --gpus "0 1 2 3"
 ```
 
+- (Reference) Extract speech tokens based on the CosyVoice3 tokenizer for llm training.
+```shell
+python speech_tokenizer.py --root datasets/clean/zh
+```
+
 - [5] Multimodal CoT Correction. Based on general-purpose MLLMs, the system uses audio, ASR text, and RTTM files as input. It leverages Chain-of-Thought (CoT) reasoning to extract clues and corrects the results of the specialized models. It also annotates character age, gender, and vocal timbre. Experimental results show that this strategy reduces the CER from 4.53% to 0.94% and the speaker diarization error rate from 8.38% to 1.20%, achieving quality comparable to or even better than manual transcription. Adding the --resume enables breakpoint COT inference to prevent wasted resources from repeated COT inferences. Now supports both Chinese and English.
 ```shell
 python cot.py --root_dir datasets/clean/zh --lang zh --provider google --model gemini-3-pro-preview --api_key xxx --resume
 python cot.py --root_dir datasets/clean/en --lang en --provider google --model gemini-3-pro-preview --api_key xxx --resume
-python build_datasets.py --root_zh datasets/clean/zh --root_en datasets/clean/en --out_dir datasets/clean --save
 ```
 
-- (Reference) Extract speech tokens based on the CosyVoice3 tokenizer for llm training.
+- The construction of the dataset retrieval file will read all production data, perform bidirectional verification of script content and speaker separation results.
 ```shell
-python speech_tokenizer.py --root datasets/clean/zh
+python build_datasets.py --root_zh datasets/clean/zh --root_en datasets/clean/en --out_dir datasets/clean --save
 ```
 
 <a name="Dubbing-Model"></a>

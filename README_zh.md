@@ -84,16 +84,20 @@ cd speaker_diarization
 bash run.sh --stage 1 --stop_stage 4 --hf_access_token hf_xxx --root datasets/clean/zh --gpus "0 1 2 3"
 ```
 
+- （参考）基于 CosyVoice3 tokenizer 提取 speech tokens 用于大模型训练。
+```shell
+python speech_tokenizer.py --root datasets/clean/zh
+```
+
 - [5] 多模态思维链校正。该系统基于通用多模态大模型，以音频、ASR 抄本和 RTTM 文件为输入，利用思维链推理来提取线索，并校正专用模型的结果，并标注人物年龄、性别和音色。实验结果表明，该策略将词错率从4.53% 降低到 0.94%，说话人识别错误率从 8.38% 降低到 1.20%，其质量可与人工转录相媲美，甚至更优。添加--resume选项可启用断点思维链推理，以避免重复思维链推理造成的资源浪费。现支持中英文。
 ```shell
 python cot.py --root_dir datasets/clean/zh --lang zh --provider google --model gemini-3-pro-preview --api_key xxx --resume
 python cot.py --root_dir datasets/clean/en --lang en --provider google --model gemini-3-pro-preview --api_key xxx --resume
-python build_datasets.py --root_zh datasets/clean/zh --root_en datasets/clean/en --out_dir datasets/clean --save
 ```
 
-- （参考）基于 CosyVoice3 tokenizer 提取 speech tokens 用于大模型训练。
+- 数据集检索文件的构建会读取生产的所有数据，双向校验脚本内容和说话人分离结果。
 ```shell
-python speech_tokenizer.py --root datasets/clean/zh
+python build_datasets.py --root_zh datasets/clean/zh --root_en datasets/clean/en --out_dir datasets/clean --save
 ```
 
 <a name="Dubbing-Model"></a>
