@@ -16,6 +16,7 @@ from torch.nn.utils import remove_weight_norm
 from torch.nn.utils.parametrize import remove_parametrizations
 from torch.nn.utils.parametrizations import weight_norm
 import logging
+import soundfile as sf
 from funcineforge.register import tables
 from funcineforge.utils.device_funcs import to_device
 import os
@@ -828,9 +829,11 @@ class CausalHifiGan(nn.Module):
                     new_freq=output_sr
                 )
                 wav_sr = output_sr
-            torchaudio.save(
-                os.path.join(wav_out_dir, f"{key[0]}.wav"), recon_speech.cpu(),
-                sample_rate=wav_sr, encoding='PCM_S', bits_per_sample=16
+            sf.write(
+                os.path.join(wav_out_dir, f"{key[0]}.wav"),
+                recon_speech.cpu().squeeze(0).numpy(),
+                samplerate=wav_sr,
+                subtype='PCM_16'
             )
 
         return recon_speech

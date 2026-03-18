@@ -4,6 +4,7 @@ import logging
 import numpy as np
 import os
 import torchaudio
+import soundfile as sf
 import time
 import shutil
 from funcineforge.register import tables
@@ -70,9 +71,11 @@ class FunCineForgeInferModel(nn.Module):
                 wav_out_dir = os.path.join(output_dir, "wav")
                 os.makedirs(wav_out_dir, exist_ok=True)
                 output_wav_path = os.path.join(wav_out_dir, f"{key[0]}.wav")
-                torchaudio.save(
-                    output_wav_path, wav.cpu(),
-                    sample_rate=self.sample_rate, encoding='PCM_S', bits_per_sample=16
+                sf.write(
+                    output_wav_path,
+                    wav.cpu().squeeze(0).numpy(),
+                    samplerate=self.sample_rate,
+                    subtype='PCM_16'
                 )
                 
                 silent_video_path = data_in[0]["video"]

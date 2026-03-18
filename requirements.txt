@@ -55,9 +55,9 @@ simplejson
 soundfile==0.13.1
 starlette==0.47.2
 tensorboardX==2.6.4
-torch==2.4.1
-torchaudio==2.4.1
-torchvision==0.19.1
+torch==2.9.1
+torchaudio==2.9.1
+torchvision==0.24.1
 tqdm==4.67.1
 transformers==4.57.0
 x_transformers==2.16.2
