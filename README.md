@@ -37,7 +37,7 @@ Fun-CineForge relies on Conda and Python environments. Execute **setup.py** to a
 
 ```shell
 # Conda
-git clone git@github.com:FunAudioLLM/FunCineForge.git
+git clone https://github.com/FunAudioLLM/FunCineForge.git
 conda create -n FunCineForge python=3.10 -y && conda activate FunCineForge
 sudo apt-get install ffmpeg
 # Initial settings
@@ -110,6 +110,15 @@ We've open-sourced the inference code and the **infer.sh** script, and provided 
 cd exps
 bash infer.sh
 ```
+
+### Interactive Demo
+Want to try it out interactively? Launch the Gradio demo for a web-based interface:
+
+```shell
+python gradio_demo.py
+```
+
+The demo will start at `http://localhost:7860` where you can upload your own videos and audio references, customize voice prompts, and generate dubbed videos on the fly.
 
 The API for multi-speaker dubbing from raw videos and SRT scripts is under development ...
 
