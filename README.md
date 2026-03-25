@@ -14,7 +14,7 @@ in Diverse Cinematic Scenes</b>
 </div>
 
 <div align="center">  
-<h4><a href="#Dataset&Demo">Dataset & Demo</a>
+<h4><a href="#Open-Source">Open Source</a>
 ｜<a href="#Environment">Environment</a>
 ｜<a href="#Dataset-Pipeline">Dataset Pipeline</a>
 ｜<a href="#Dubbing-Model">Dubbing Model</a>
@@ -26,12 +26,16 @@ in Diverse Cinematic Scenes</b>
 
 **Fun-CineForge** contains an end-to-end dataset pipeline for producing large-scale dubbing datasets and an MLLM-based dubbing model designed for diverse cinematic scenes. Using this pipeline, we constructed the first large-scale Chinese television dubbing dataset CineDub-CN, which includes rich annotations and diverse scenes. In monologue, narration, dialogue, and multi-speaker scenes, our dubbing model consistently outperforms state-of-the-art methods in terms of audio quality, lip-sync, timbre transition, and instruction following.
 
-<a name="Dataset&Demo"></a>
-## Dataset & Demo 🎬
+<a name="Open-Source"></a>
+## Open Source 🎬
 You can access [https://funcineforge.github.io/](https://funcineforge.github.io/) to get our CineDub-CN dataset samples and demo samples. 
 
+ModelScope link: [https://www.modelscope.cn/models/FunAudioLLM/Fun-CineForge/](https://www.modelscope.cn/models/FunAudioLLM/Fun-CineForge/)
+
+HuggingFace link: [https://huggingface.co/FunAudioLLM/Fun-CineForge/](https://huggingface.co/FunAudioLLM/Fun-CineForge/)
+
 <a name="Environment"></a>
-## Environmental Installation
+## Environment
 
 Fun-CineForge relies on Conda and Python environments. Execute **setup.py** to automatically install the entire project environment and open-source model.
 
@@ -111,7 +115,7 @@ cd exps
 bash infer.sh
 ```
 
-The API for multi-speaker dubbing from raw videos and SRT scripts is under development ...
+You can access [ModelScope Space](https://www.modelscope.cn/studios/FunAudioLLM/Fun-CineForge-Demo/) or [HuggingFace Space](https://huggingface.co/spaces/FunAudioLLM/Fun-CineForge-Demo/) to experience Fun-CineForge-zh-en-v1-0.5B model now. 
 
 <a name="Recent-Updates"></a>
 ## Recent Updates 🚀

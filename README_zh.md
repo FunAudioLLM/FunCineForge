@@ -13,7 +13,7 @@
 </div>
 
 <div align="center">
-<h4><a href="#数据集&样例">数据集 & 样例</a>
+<h4><a href="#开源">开源</a>
 ｜<a href="#环境安装">环境安装</a>
 ｜<a href="#数据集管道">数据集管道</a>
 ｜<a href="#配音模型">配音模型</a>
@@ -25,9 +25,13 @@
 
 **Fun-CineForge** 包含一个生产大规模配音数据集的端到端数据集管道，和一个基于多模态大模型的配音模型，该模型专为多样的电影场景而设计。利用该管道，我们构建了首个大规模中文电视剧配音数据集 CineDub-CN，该数据集包含丰富的标注和多样化的场景。在独白、旁白、对话和多说话人场景中，我们的配音模型在音频质量、唇形同步、音色转换和指令遵循等方面全部优于最先进的方法。
 
-<a name="数据集&样例"></a>
-## 数据集 & 样例 🎬
+<a name="开源"></a>
+## 开源 🎬
 您可以访问此 [https://funcineforge.github.io/](https://funcineforge.github.io/) 获取我们的 CineDub-CN 数据集和 CineDub-EN 数据集样例和演示样例。
+
+ModelScope 链接： [https://www.modelscope.cn/models/FunAudioLLM/Fun-CineForge/](https://www.modelscope.cn/models/FunAudioLLM/Fun-CineForge/)
+
+HuggingFace 链接： [https://huggingface.co/FunAudioLLM/Fun-CineForge/](https://huggingface.co/FunAudioLLM/Fun-CineForge/)
 
 <a name="环境安装"></a>
 ## 环境安装
@@ -109,7 +113,7 @@ cd exps
 bash infer.sh
 ```
 
-从原始视频和 SRT 脚本进行多人配音的 API 调用接口在开发中 ... 
+您现在可以通过访问 [ModelScope Space](https://www.modelscope.cn/studios/FunAudioLLM/Fun-CineForge-Demo/) 或 [HuggingFace Space](https://huggingface.co/spaces/FunAudioLLM/Fun-CineForge-Demo/) 来体验 Fun-CineForge-zh-en-v1-0.5B 模型。
 
 <a name="近期更新"></a>
 ## 近期更新 🚀
